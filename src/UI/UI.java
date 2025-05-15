@@ -34,6 +34,9 @@ public class UI {
       case 1:
         processWarehouseMenu();
         break;
+      case 3:
+        processEmployeeMenu();
+        break;
       case 0:
         running = false;
         break;
@@ -64,6 +67,29 @@ public class UI {
         return;
       default:
         System.out.println("Invalid choice. Please try again.");
+    }
+  }
+
+  private void processEmployeeMenu() {
+    showEmployeeMenu();
+    int choice = readIntInput("Enter your choice: ");
+    switch (choice) {
+      case 1:
+        hireEmployee();
+        break;
+      case 2:
+        // fireEmployee();
+        break;
+      case 3:
+        // listActiveEmployees();
+        break;
+      case 4:
+        // listAllEmployees();
+        break;
+      case 0:
+        return;
+      default:
+        System.out.println("Invalid choice. Try again.");
     }
   }
 
@@ -109,6 +135,46 @@ public class UI {
     }
   }
 
+  private void hireEmployee() {
+    String name = readStringInput("Enter employee name: ");
+    String description = readStringInput("Enter employee description: ");
+    String contactInfo = readStringInput("Enter contact info: ");
+    int age = readIntInput("Enter age: ");
+    String position = readStringInput("Enter employee position: ");
+    double salary = readDoubleInput("Enter employee salary: ");
+
+    System.out.println("Choose type of employee:");
+    System.out.println("1. Manager");
+    System.out.println("2. Worker");
+    System.out.println("0. Exit");
+    int choice = readIntInput("Enter your choice: ");
+
+    switch (choice) {
+      case 1:
+        company.hireManager(name, description, contactInfo, age, position, salary);
+        break;
+      case 2:
+        company.hireWorker(name, description, contactInfo, age, position, salary);
+        break;
+      case 0:
+        return;
+      default: 
+        System.out.println("Error: invalid choice. Try again.");
+        return;
+    }
+    System.out.println("Employee hired successfully.");
+  } 
+  
+  private double readDoubleInput(String prompt) {
+    System.out.print(prompt);
+    while (!scanner.hasNextDouble()) {
+      System.out.println("Please enter a valid number.");
+      System.out.print(prompt);
+      scanner.next();
+    }
+    return scanner.nextDouble();
+  }
+
   private int readIntInput(String prompt) {
     System.out.print(prompt);
     while (!scanner.hasNextInt()) {
@@ -129,6 +195,8 @@ public class UI {
   public void showMainMenu() {
     System.out.println("------Trading system------");
     System.out.println("1. Warehouse Management");
+    //System.out.println("2. Product Management");
+    System.out.println("3. Employee Management");
     System.out.println("0. Exit");
   }
 
@@ -138,6 +206,15 @@ public class UI {
     System.out.println("2. Close Warehouse");
     System.out.println("3. List Active Warehouses");
     System.out.println("4. List All Warehouses");
+    System.out.println("0. Exit");
+  }
+
+  private void showEmployeeMenu() {
+    System.out.println("------Employee managment------");
+    System.out.println("1. Hire employee");
+    //System.out.println("2. Fire employee");
+    //System.out.println("3. List active employees");
+    //System.out.println("4. List all employees");
     System.out.println("0. Exit");
   }
 }

@@ -23,10 +23,10 @@ public class Company {
   public Company(DataLoader dataLoader) {
     this.dataLoader = dataLoader;
     warehouses = dataLoader.loadWarehouses();
-    // sellPoints = dataLoader.loadSellPoints();
-    // employees = dataLoader.loadEmployees();
-    // customers = dataLoader.loadCustomers();
-    // products = dataLoader.loadProducts();
+    sellPoints = dataLoader.loadSellPoints();
+    employees = dataLoader.loadEmployees();
+    customers = dataLoader.loadCustomers();
+    products = dataLoader.loadProducts();
   }
 
   public void createWarehouse(String name, String description, 
@@ -49,6 +49,18 @@ public class Company {
 
   public ArrayList<Warehouse> getAllWarehouses() {
     return new ArrayList<>(warehouses);
+  }
+
+  public void hireManager(String name, String description, String contactInfo, int age, String position, double salary) {
+    Employee employee = new Manager(name, description, contactInfo, age, position, salary);
+    employees.add(employee);
+    saveData();
+  }
+
+  public void hireWorker(String name, String description, String contactInfo, int age, String position, double salary) {
+    Employee employee = new Worker(name, description, contactInfo, age, position, salary);
+    employees.add(employee);
+    saveData();
   }
 
   private void saveData() {
