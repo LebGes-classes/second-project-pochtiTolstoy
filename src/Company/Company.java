@@ -73,6 +73,22 @@ public class Company {
         .collect(Collectors.toCollection(ArrayList::new));
   }
 
+  public ArrayList<Manager> getInactiveManagers() {
+    return employees.stream()
+      .filter(employee -> employee instanceof Manager)
+      .map(employee -> (Manager) employee)
+      .filter(manager -> !manager.isActive())
+      .collect(Collectors.toCollection(ArrayList::new));
+  }
+
+  public ArrayList<Worker> getInactiveWorkers() {
+    return employees.stream()
+      .filter(employee -> employee instanceof Worker)
+      .map(employee -> (Worker) employee)
+      .filter(worker -> !worker.isActive())
+      .collect(Collectors.toCollection(ArrayList::new));
+  }
+
   private void saveData() {
     dataLoader.saveWarehouses(warehouses);
     dataLoader.saveSellPoints(sellPoints);

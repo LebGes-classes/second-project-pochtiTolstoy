@@ -98,14 +98,67 @@ public class UI {
     String name = readStringInput("Enter warehouse name: ");
     String description = readStringInput("Enter warehouse description: ");
     // TODO : select worker and manager
-    Manager manager = new Manager();
-    Worker worker = new Worker();
+    //Manager manager = new Manager();
+    //Worker worker = new Worker();
+
+    Manager manager = selectManager("Select warehouse manager: ");
+    if (manager == null) {
+      System.out.println("An error arose when creating a warehouse.");
+      return;
+    }
+
+    Worker worker = selectWorker("Select warehouse worker: ");
+    if (worker == null) {
+      System.out.println("An error arose when creating a warehouse.");
+      return;
+    }
+
     if (true) {
       company.createWarehouse(name, description, manager, worker);
       System.out.println("Warehouse created successfully.");
     } else {
       System.out.println("An error arose when creating a warehouse.");
     }
+  }
+
+  private Manager selectManager(String prompt) {
+    ArrayList<Manager> managers = company.getInactiveManagers();
+    if (managers.isEmpty()) {
+      System.out.println("No inactive managers available.");
+      return null;
+    }
+
+    System.out.println(prompt);
+    for (int i = 0; i < managers.size(); ++i) {
+      System.out.println((i + 1) + ". " + managers.get(i));
+    }
+
+    int choice = readIntInput("Enter manager number: ") - 1;
+    if (choice < 0 || choice >= managers.size()) {
+      System.out.println("Invalid manager selection.");
+      return null;
+    }
+    return managers.get(choice);
+  }
+
+  private Worker selectWorker(String prompt) {
+    ArrayList<Worker> workers = company.getInactiveWorkers();
+    if (workers.isEmpty()) {
+      System.out.println("No inactive workers available.");
+      return null;
+    }
+
+    System.out.println(prompt);
+    for (int i = 0; i < workers.size(); ++i) {
+      System.out.println((i + 1) + ". " + workers.get(i));
+    }
+
+    int choice = readIntInput("Enter manager number: ") - 1;
+    if (choice < 0 || choice >= workers.size()) {
+      System.out.println("Invalid manager selection.");
+      return null;
+    }
+    return workers.get(choice);
   }
 
   private void closeWarehouse() {

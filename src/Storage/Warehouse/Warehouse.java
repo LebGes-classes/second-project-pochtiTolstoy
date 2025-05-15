@@ -27,19 +27,19 @@ public class Warehouse extends Entity implements Serializable {
   }
 
   public ArrayList<Cell> getCells() {
-      return new ArrayList<>(cells);
+    return new ArrayList<>(cells);
   }
 
   public void addCell(Cell cell) {
-      cells.add(cell);
+    cells.add(cell);
   }
 
   public void removeCell(Cell cell) {
-      cells.remove(cell);
+    cells.remove(cell);
   }
 
   public Manager getManager() {
-      return manager;
+    return manager;
   }
 
   public void setManager(Manager manager) {
@@ -63,11 +63,11 @@ public class Warehouse extends Entity implements Serializable {
   }
 
   public boolean isActive() {
-      return isActive;
+    return isActive;
   }
 
   public void setActive(boolean active) {
-      isActive = active;
+    isActive = active;
   }
 
   @Override
