@@ -8,7 +8,7 @@ import Person.Customer.Customer;
 import Product.Product;
 
 public class DataLoaderImpl implements DataLoader {
-  private static final String DATA_DIR = "res";
+  private static final String DATA_DIR = "../res";
   private static final String WAREHOUSES_FILE = DATA_DIR + "/warehouses.ser";
   private static final String SELL_POINTS_FILE = DATA_DIR + "/sell_points.ser";
   private static final String EMPLOYEES_FILE = DATA_DIR + "/employees.ser";
