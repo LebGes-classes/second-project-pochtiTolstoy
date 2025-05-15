@@ -51,8 +51,6 @@ public class Company {
     return new ArrayList<>(warehouses);
   }
 
-  
-
   private void saveData() {
     dataLoader.saveWarehouses(warehouses);
     dataLoader.saveSellPoints(sellPoints);

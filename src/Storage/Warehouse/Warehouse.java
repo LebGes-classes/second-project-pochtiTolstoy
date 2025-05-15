@@ -13,12 +13,16 @@ public class Warehouse extends Entity implements Serializable {
   private Manager manager;
   private boolean isActive;
 
+  public Warehouse() {
+    this("none", "none", null, null);
+  }
+
   public Warehouse(String name, String description, Manager manager, Worker worker) {
     super(name, description);
     this.cells = new ArrayList<>();
-    this.manager = manager;
     this.workers = new ArrayList<>();
-    this.workers.add(worker);
+    setManager(manager);
+    addWorker(worker);
     this.isActive = true;
   }
 
@@ -39,7 +43,12 @@ public class Warehouse extends Entity implements Serializable {
   }
 
   public void setManager(Manager manager) {
-      this.manager = manager;
+    if (manager == null) return;
+    if (this.manager != null) {
+      this.manager.removeWarehouse();
+    }
+    this.manager = manager;
+    manager.assignWarehouse(this);
   }
 
   public ArrayList<Worker> getWorkers() {
@@ -47,7 +56,10 @@ public class Warehouse extends Entity implements Serializable {
   }
 
   public void addWorker(Worker worker) {
+    if (worker == null) return;
+    if (workers.contains(worker)) return;
     this.workers.add(worker);
+    worker.assignWarehouse(this);
   }
 
   public boolean isActive() {
@@ -61,10 +73,11 @@ public class Warehouse extends Entity implements Serializable {
   @Override
   public String toString() {
     // TODO : capacity
+    String managerName = (manager != null) ? manager.getName() : "none";
     return String.format(
         "Warehouse [ id = %s, name = %s, manager = %s, workers = %s, " +
         "active = %b, cells = %d, capacity = %d/%d ]",
-        getId(), getName(), manager.getName(), workers.size(), 
+        getId(), getName(), managerName, workers.size(), 
         isActive, cells.size(), -1, -1);
   }
 }

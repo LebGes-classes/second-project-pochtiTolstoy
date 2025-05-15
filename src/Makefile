@@ -17,3 +17,11 @@ clean:
 
 run: all
 	java -cp $(BIN_DIR) Main
+
+debug: all
+	jdb -sourcepath . -classpath ../build Main
+
+debug_ini: all
+	cp ../debug/jdb.ini .
+	jdb -sourcepath . -classpath ../build Main
+	rm jdb.ini
