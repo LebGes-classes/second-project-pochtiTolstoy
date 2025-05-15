@@ -29,15 +29,19 @@ public class UI {
   private boolean processMainMenuChoice() {
     showMainMenu();
     int choice = readIntInput("Enter your choice: ");
+    boolean running = true;
     switch (choice) {
       case 1:
         processWarehouseMenu();
+        break;
       case 0:
-        return false;
+        running = false;
+        break;
       default: 
         System.out.println("Error: invalid choice. Try again.");
+        break;
     }
-    return true;
+    return running;
   }
 
   private void processWarehouseMenu() {
