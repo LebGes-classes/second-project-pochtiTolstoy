@@ -82,7 +82,7 @@ public class UI {
         // fireEmployee();
         break;
       case 3:
-        // listActiveEmployees();
+        listActiveEmployees();
         break;
       case 4:
         listAllEmployees();
@@ -166,6 +166,18 @@ public class UI {
     System.out.println("Employee hired successfully.");
   } 
 
+  private void listActiveEmployees() {
+    ArrayList<Employee> employees = company.getActiveEmployees();
+    if (employees.isEmpty()) {
+      System.out.println("No active employees found.");
+    } else {
+      System.out.println("\nActive Employees:");
+      for (int i = 0; i < employees.size(); i++) {
+        System.out.println((i + 1) + ". " + employees.get(i));
+      }
+    }
+  }
+
   private void listAllEmployees() {
     ArrayList<Employee> employees = company.getAllEmployees();
     if (employees.isEmpty()) {
@@ -226,7 +238,7 @@ public class UI {
     System.out.println("------Employee managment------");
     System.out.println("1. Hire employee");
     //System.out.println("2. Fire employee");
-    //System.out.println("3. List active employees");
+    System.out.println("3. List active employees");
     System.out.println("4. List all employees");
     System.out.println("0. Exit");
   }

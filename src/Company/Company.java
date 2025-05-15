@@ -67,6 +67,12 @@ public class Company {
     return new ArrayList<>(employees);
   }
 
+  public ArrayList<Employee> getActiveEmployees() {
+    return employees.stream()
+        .filter(Employee::isActive)
+        .collect(Collectors.toCollection(ArrayList::new));
+  }
+
   private void saveData() {
     dataLoader.saveWarehouses(warehouses);
     dataLoader.saveSellPoints(sellPoints);
