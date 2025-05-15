@@ -41,8 +41,8 @@ public abstract class Employee extends Person {
   @Override
   public String toString() {
     return super.toString() +
-      "position : " + position + "\n" +
-      "salary   : " + salary + "\n" +
-      "isActive : " + isActive + "\n";
+      "position       : " + position + "\n" +
+      "salary         : " + salary + "\n" +
+      "isActive       : " + isActive + "\n";
   }
 }

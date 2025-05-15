@@ -26,7 +26,7 @@ public abstract class Person extends Entity {
   @Override
   public String toString() {
     return super.toString() +
-      "contact info : " + contactInfo + "\n" +
-      "age          : " + age + "\n";
+      "contact info   : " + contactInfo + "\n" +
+      "age            : " + age + "\n";
   }
 }

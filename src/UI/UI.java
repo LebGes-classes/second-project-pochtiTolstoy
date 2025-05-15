@@ -5,6 +5,7 @@ import Company.Company;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import Person.Employee.Employee;
 import Person.Employee.Manager.Manager;
 import Person.Employee.Worker.Worker;
 import Storage.Warehouse.Warehouse;
@@ -84,7 +85,7 @@ public class UI {
         // listActiveEmployees();
         break;
       case 4:
-        // listAllEmployees();
+        listAllEmployees();
         break;
       case 0:
         return;
@@ -164,6 +165,18 @@ public class UI {
     }
     System.out.println("Employee hired successfully.");
   } 
+
+  private void listAllEmployees() {
+    ArrayList<Employee> employees = company.getAllEmployees();
+    if (employees.isEmpty()) {
+      System.out.println("No employees found.");
+    } else {
+      System.out.println("All employees:");
+      for (int i = 0; i < employees.size(); ++i) {
+        System.out.println((i + 1) + ". " + employees.get(i));
+      }
+    }
+  }
   
   private double readDoubleInput(String prompt) {
     System.out.print(prompt);
@@ -214,7 +227,7 @@ public class UI {
     System.out.println("1. Hire employee");
     //System.out.println("2. Fire employee");
     //System.out.println("3. List active employees");
-    //System.out.println("4. List all employees");
+    System.out.println("4. List all employees");
     System.out.println("0. Exit");
   }
 }

@@ -63,6 +63,10 @@ public class Company {
     saveData();
   }
 
+  public ArrayList<Employee> getAllEmployees() {
+    return new ArrayList<>(employees);
+  }
+
   private void saveData() {
     dataLoader.saveWarehouses(warehouses);
     dataLoader.saveSellPoints(sellPoints);
