@@ -116,12 +116,13 @@ public class UI {
       System.out.println(prompt);
       scanner.next();
     }
-    return scanner.nextInt();
+    int num = scanner.nextInt();
+    scanner.nextLine();
+    return num;
   }
 
   private String readStringInput(String prompt) {
     System.out.print(prompt);
-    scanner.nextLine();
     return scanner.nextLine();
   }
 
