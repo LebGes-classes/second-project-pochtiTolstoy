@@ -95,7 +95,7 @@ public class UI {
         // cellProduct();
         break;
       case 5:
-        // listAvailableProducts();
+        listAvailableProducts();
         break;
       case 0:
         return;

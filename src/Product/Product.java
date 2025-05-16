@@ -7,6 +7,7 @@ public class Product extends Entity {
   private int quantity;
 
   public Product(String name, String description, double price, int quantity) {
+    super(name, description);
     this.price = price;
     this.quantity = quantity;
   }
