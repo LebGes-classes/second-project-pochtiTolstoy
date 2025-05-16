@@ -1,5 +1,7 @@
 package Order.CustomerOrder;
 
-public class CustomerOrder {
+import Order.Order;
+
+public class CustomerOrder extends Order {
 
 }

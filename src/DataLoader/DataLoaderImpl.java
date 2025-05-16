@@ -6,6 +6,7 @@ import Storage.SellPoint.SellPoint;
 import Person.Employee.Employee;
 import Person.Customer.Customer;
 import Product.Product;
+import Storage.Fabric.Fabric;
 
 public class DataLoaderImpl implements DataLoader {
   private static final String DATA_DIR = "../res";
@@ -14,6 +15,7 @@ public class DataLoaderImpl implements DataLoader {
   private static final String EMPLOYEES_FILE = DATA_DIR + "/employees.ser";
   private static final String CUSTOMERS_FILE = DATA_DIR + "/customers.ser";
   private static final String PRODUCTS_FILE = DATA_DIR + "/products.ser";
+  private static final String FABRICS_FILE = DATA_DIR + "/fabrics.ser";
 
   public DataLoaderImpl() {
     File directory = new File(DATA_DIR);
@@ -71,6 +73,11 @@ public class DataLoaderImpl implements DataLoader {
   }
 
   @Override
+  public void saveFabrics(ArrayList<Fabric> fabrics) {
+    saveToFile(fabrics, FABRICS_FILE);
+  }
+
+  @Override
   public ArrayList<Warehouse> loadWarehouses() {
       return loadFromFile(WAREHOUSES_FILE);
   }
@@ -93,5 +100,10 @@ public class DataLoaderImpl implements DataLoader {
   @Override
   public ArrayList<Product> loadProducts() {
       return loadFromFile(PRODUCTS_FILE);
+  }
+
+  @Override
+  public ArrayList<Fabric> loadFabrics() {
+    return loadFromFile(FABRICS_FILE);
   }
 }

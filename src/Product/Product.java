@@ -15,6 +15,14 @@ public class Product extends Entity {
     this.type = type;
   }
 
+  public Product(Product product) {
+    this(product.getName(), 
+        product.getDescription(), 
+        product.getPrice(),
+        product.getQuantity(),
+        product.getType());
+  }
+
   public double getPrice() {
     return price;
   }
@@ -30,6 +38,8 @@ public class Product extends Entity {
   public void setQuantity(int quantity) {
     this.quantity = quantity;
   }
+
+  public ProductType getType() { return type; }
 
   @Override
   public String toString() {

@@ -13,6 +13,7 @@ import Person.Employee.Worker.Worker;
 import Storage.Cell.Cell;
 import Product.Product;
 import Util.ProductType;
+import Storage.Fabric.Fabric;
 
 public class Company {
   private DataLoader dataLoader;
@@ -21,6 +22,7 @@ public class Company {
   private ArrayList<Employee> employees;
   private ArrayList<Customer> customers;
   private ArrayList<Product> products;
+  private ArrayList<Fabric> fabrics;
 
   public Company(DataLoader dataLoader) {
     this.dataLoader = dataLoader;
@@ -29,6 +31,7 @@ public class Company {
     employees = dataLoader.loadEmployees();
     customers = dataLoader.loadCustomers();
     products = dataLoader.loadProducts();
+    fabrics = dataLoader.loadFabrics();
   }
 
   public void createWarehouse(String name, String description, 
@@ -47,6 +50,12 @@ public class Company {
   public void createProduct(String name, String description, double price, int quantity, ProductType type) {
     Product product = new Product(name, description, price, quantity, type);  
     products.add(product);
+    saveData();
+  }
+
+  public void createFabric(String name, String description, ProductType type) {
+    Fabric fabric = new Fabric(name, description, type, type.getTimeToProduce());
+    fabrics.add(fabric);
     saveData();
   }
 
@@ -107,11 +116,22 @@ public class Company {
       .collect(Collectors.toCollection(ArrayList::new));
   }
 
+  public ArrayList<Fabric> getAllFabrics() {
+    return new ArrayList<>(fabrics);
+  }
+
+  public void storeProductInCell(Cell cell, Product product) {
+    Product warehouseProduct = new Product(product);
+    cell.addProduct(warehouseProduct);
+    saveData();
+  }
+
   private void saveData() {
     dataLoader.saveWarehouses(warehouses);
     dataLoader.saveSellPoints(sellPoints);
     dataLoader.saveEmployees(employees);
     dataLoader.saveCustomers(customers);
     dataLoader.saveProducts(products);
+    dataLoader.saveFabrics(fabrics);
   }
 }

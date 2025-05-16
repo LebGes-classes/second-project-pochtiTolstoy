@@ -11,6 +11,9 @@ import Person.Employee.Worker.Worker;
 import Storage.Warehouse.Warehouse;
 import Product.Product;
 import Util.ProductType;
+import Order.CompanyOrder.CompanyOrder;
+import Storage.Fabric.Fabric;
+import Storage.Cell.Cell;
 
 public class UI {
   private Company company;
@@ -42,6 +45,9 @@ public class UI {
         break;
       case 3:
         processEmployeeMenu();
+        break;
+      case 4:
+        processFabricMenu();
         break;
       case 0:
         running = false;
@@ -90,7 +96,7 @@ public class UI {
         // moveProduct();
         break;
       case 3:
-        //purchaseProduct();
+        purchaseProduct();
         break;
       case 4:
         // sellProduct();
@@ -128,6 +134,30 @@ public class UI {
     }
   }
 
+  private void processFabricMenu() {
+    showFabricMenu();
+    int choice = readIntInput("Enter your choice: ");
+    switch (choice) {
+      case 1:
+        createFabric();
+        break;
+      case 2:
+        //listAllFabrics();
+        break;
+      case 0:
+        break;
+      default:
+        System.out.println("Error: invalid menu option");
+    }
+  }
+
+  private void createFabric() {
+    String name = readStringInput("Enter fabric name: ");
+    String description = readStringInput("Enter fabric description: ");
+    ProductType type = selectProductType("Enter type of fabric's product: ");
+    company.createFabric(name, description, type);
+  }
+
   private void createWarehouse() {
     String name = readStringInput("Enter warehouse name: ");
     String description = readStringInput("Enter warehouse description: ");
@@ -155,10 +185,98 @@ public class UI {
     String name = readStringInput("Enter product name: ");
     String description = readStringInput("Enter product description: ");
     double price = readDoubleInput("Enter product price: ");
-    int quantity = readIntInput("Enter product quantity: ");
+    //int quantity = readIntInput("Enter product quantity: ");
     ProductType type = selectProductType("Select product type:");
-    company.createProduct(name, description, price, quantity, type);
+    company.createProduct(name, description, price, 0, type);
     System.out.println("Product created successfully.");
+  }
+
+  private void purchaseProduct() {
+    Product product = null;
+    CompanyOrder order = createCompanyOrder();
+    if (order == null) {
+      System.out.println("No available order");
+      return;
+    }
+    Fabric fabric = selectFabric(order);
+    if (fabric == null) {
+      System.out.println("No available fabric");
+      return;
+    }
+    fabric.acceptOrder(order);
+    if (fabric.isProductReady()) {
+      product = fabric.getProduct(order);
+    }
+
+    // TODO : bind materialized product to warehouse and cell
+    Warehouse warehouse = selectActiveWarehouse("Select active warehouse for storage: ");
+    if (warehouse == null) {
+      System.out.println("No available warehouse");
+      return;
+    }
+
+    ArrayList<Cell> cells = warehouse.getCells();
+    int quantity = product.getQuantity();
+    int availableCells = 0;
+    System.out.println("Choose cell:");
+    for (int i = 0; i < cells.size(); ++i) {
+      if (cells.get(i).getAvailableCapacity() >= quantity) {
+        System.out.println(++availableCells + ". " + cells.get(i).toString());
+      }
+    }
+
+    int choice = readIntInput("Enter choice: ") - 1;
+    if (choice < 0 || choice >= availableCells) {
+      System.out.println("Invalid cell selection");
+      return;
+    }
+
+    company.storeProductInCell(cells.get(choice), product);
+    System.out.println("Product purchase is sucessfull.");
+  }
+
+  private CompanyOrder createCompanyOrder() {
+    Product product = selectProduct("Choose available product to purchase:"); 
+    if (product == null) {
+      return null; 
+    }
+    int quantity = readIntInput("Enter quantity: ");
+    CompanyOrder order = new CompanyOrder(product, quantity);
+    return order;
+  }
+
+  private Fabric selectFabric(CompanyOrder order) {
+    ArrayList<Fabric> fabrics = company.getAllFabrics();
+    if (!fabrics.isEmpty()) {
+      ProductType type = order.getProduct().getType();
+      for (int i = 0; i < fabrics.size(); ++i) {
+        if (type == fabrics.get(i).getProductType()) {
+          return fabrics.get(i);
+        }
+      }
+    }
+    System.out.println("No available fabric.");
+    return null;
+  }
+
+  private Product selectProduct(String prompt) {
+    ArrayList<Product> products = company.getAvailableProducts();
+    if (products.isEmpty()) {
+      System.out.println("No products available.");
+      return null;
+    }
+
+    System.out.println(prompt);
+    for (int i = 0; i < products.size(); ++i) {
+      System.out.println((i + 1) + ". " + products.get(i));
+    }
+
+    int choice = readIntInput("Enter product number: ") - 1;
+    if (choice < 0 || choice >= products.size()) {
+      System.out.println("Invalid product selection.");
+      return null;
+    }
+    return products.get(choice);
   }
 
   private ProductType selectProductType(String prompt) {
@@ -211,6 +329,26 @@ public class UI {
 
   private Warehouse selectWarehouse(String prompt) {
     ArrayList<Warehouse> warehouses = company.getAllWarehouses();
+    if (warehouses.isEmpty()) {
+      System.out.println("No warehouses available.");
+      return null;
+    }
+
+    System.out.println(prompt);
+    for (int i = 0; i < warehouses.size(); i++) {
+      System.out.println((i + 1) + ". " + warehouses.get(i));
+    }
+
+    int choice = readIntInput("Enter warehouse number: ") - 1;
+    if (choice < 0 || choice >= warehouses.size()) {
+      System.out.println("Invalid warehouse selection.");
+      return null;
+    }
+    return warehouses.get(choice);
+  }
+
+  private Warehouse selectActiveWarehouse(String prompt) {
+    ArrayList<Warehouse> warehouses = company.getActiveWarehouses();
     if (warehouses.isEmpty()) {
       System.out.println("No warehouses available.");
       return null;
@@ -380,9 +518,10 @@ public class UI {
 
   private void showMainMenu() {
     System.out.println("------Trading system------");
-    System.out.println("1. Warehouse Management");
-    System.out.println("2. Product Management");
-    System.out.println("3. Employee Management");
+    System.out.println("1. Warehouse management");
+    System.out.println("2. Product management");
+    System.out.println("3. Employee management");
+    System.out.println("4. Fabric managment");
     System.out.println("0. Exit");
   }
 
@@ -423,6 +562,13 @@ public class UI {
     //System.out.println("2. Fire employee");
     System.out.println("3. List active employees");
     System.out.println("4. List all employees");
+    System.out.println("0. Exit");
+  }
+
+  private void showFabricMenu() {
+    System.out.println("------Fabric managment------");
+    System.out.println("1. Create fabric");
+    System.out.println("2. List fabrics");
     System.out.println("0. Exit");
   }
 }
