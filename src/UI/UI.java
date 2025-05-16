@@ -9,6 +9,7 @@ import Person.Employee.Employee;
 import Person.Employee.Manager.Manager;
 import Person.Employee.Worker.Worker;
 import Storage.Warehouse.Warehouse;
+import Product.Product;
 
 public class UI {
   private Company company;
@@ -34,6 +35,9 @@ public class UI {
     switch (choice) {
       case 1:
         processWarehouseMenu();
+        break;
+      case 2:
+        processProductMenu();
         break;
       case 3:
         processEmployeeMenu();
@@ -63,6 +67,35 @@ public class UI {
         break;
       case 4:
         listAllWarehouses();
+        break;
+      case 5:
+        createCell();
+        break;
+      case 0:
+        return;
+      default:
+        System.out.println("Invalid choice. Please try again.");
+    }
+  }
+
+  private void processProductMenu() {
+    showProductMenu();
+    int choice = readIntInput("Enter your choice: ");
+    switch (choice) {
+      case 1:
+        createProduct();
+        break;
+      case 2:
+        // moveProduct();
+        break;
+      case 3:
+        // purchaseProduct();
+        break;
+      case 4:
+        // cellProduct();
+        break;
+      case 5:
+        // listAvailableProducts();
         break;
       case 0:
         return;
@@ -97,10 +130,6 @@ public class UI {
   private void createWarehouse() {
     String name = readStringInput("Enter warehouse name: ");
     String description = readStringInput("Enter warehouse description: ");
-    // TODO : select worker and manager
-    //Manager manager = new Manager();
-    //Worker worker = new Worker();
-
     Manager manager = selectManager("Select warehouse manager: ");
     if (manager == null) {
       System.out.println("An error arose when creating a warehouse.");
@@ -119,6 +148,61 @@ public class UI {
     } else {
       System.out.println("An error arose when creating a warehouse.");
     }
+  }
+
+  private void createProduct() {
+    String name = readStringInput("Enter product name: ");
+    String description = readStringInput("Enter product description: ");
+    double price = readDoubleInput("Enter product price: ");
+    int quantity = readIntInput("Enter product quantity: ");
+    company.createProduct(name, description, price, quantity);
+    System.out.println("Product created successfully.");
+  }
+
+  private void listAvailableProducts() {
+    ArrayList<Product> products = company.getAvailableProducts();
+    if (products.isEmpty()) {
+      System.out.println("No products available.");
+    } else {
+      System.out.println("Available products:");
+      for (int i = 0; i < products.size(); ++i) {
+        System.out.println((i + 1) + ". " + products.get(i));
+      }
+    }
+  }
+
+  private void createCell() {
+    Warehouse warehouse = selectWarehouse("Select warehouse for the new cell: ");
+    if (warehouse == null) {
+      System.out.println("Error: no available warehouse");
+      return;
+    }
+
+    String name = readStringInput("Enter cell name: ");
+    String description = readStringInput("Enter cell description: ");
+    int capacity = readIntInput("Enter cell capacity: ");
+    company.createCell(name, description, capacity, warehouse);
+    System.out.println("Cell created successfully.");
+  }
+
+  private Warehouse selectWarehouse(String prompt) {
+    ArrayList<Warehouse> warehouses = company.getAllWarehouses();
+    if (warehouses.isEmpty()) {
+      System.out.println("No warehouses available.");
+      return null;
+    }
+
+    System.out.println(prompt);
+    for (int i = 0; i < warehouses.size(); i++) {
+      System.out.println((i + 1) + ". " + warehouses.get(i));
+    }
+
+    int choice = readIntInput("Enter warehouse number: ") - 1;
+    if (choice < 0 || choice >= warehouses.size()) {
+      System.out.println("Invalid warehouse selection.");
+      return null;
+    }
+    return warehouses.get(choice);
   }
 
   private Manager selectManager(String prompt) {
@@ -270,20 +354,32 @@ public class UI {
     return scanner.nextLine();
   }
 
-  public void showMainMenu() {
+  private void showMainMenu() {
     System.out.println("------Trading system------");
     System.out.println("1. Warehouse Management");
-    //System.out.println("2. Product Management");
+    System.out.println("2. Product Management");
     System.out.println("3. Employee Management");
     System.out.println("0. Exit");
   }
 
+  private void showProductMenu() {
+    System.out.println("------Product system------");
+    System.out.println("1. Create product");
+    System.out.println("2. Move product");
+    System.out.println("3. Purchase product");
+    System.out.println("4. Sell product");
+    System.out.println("5. List available products");
+    System.out.println("0. Exit");
+  } 
+
   private void showWarehouseMenu() {
     System.out.println("------Warehouses------");
     System.out.println("1. Create Warehouse");
-    System.out.println("2. Close Warehouse");
+    //System.out.println("2. Close Warehouse");
     System.out.println("3. List Active Warehouses");
     System.out.println("4. List All Warehouses");
+    System.out.println("5. Create Cell");
+    System.out.println("6. List All Warehouses");
     System.out.println("0. Exit");
   }
 

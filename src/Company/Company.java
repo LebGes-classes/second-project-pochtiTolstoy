@@ -10,6 +10,7 @@ import Person.Employee.Employee;
 import Person.Customer.Customer;
 import Person.Employee.Manager.Manager;
 import Person.Employee.Worker.Worker;
+import Storage.Cell.Cell;
 import Product.Product;
 
 public class Company {
@@ -36,6 +37,18 @@ public class Company {
     saveData();
   }
 
+  public void createCell(String name, String description, int capactiy, Warehouse warehouse) {
+    Cell cell = new Cell(name, description, capactiy);
+    warehouse.addCell(cell);
+    saveData();
+  }
+
+  public void createProduct(String name, String description, double price, int quantity) {
+    Product product = new Product(name, description, price, quantity);  
+    products.add(product);
+    saveData();
+  }
+
   public void closeWarehouse(Warehouse warehouse) {
     warehouse.setActive(false);
     saveData();
@@ -49,6 +62,10 @@ public class Company {
 
   public ArrayList<Warehouse> getAllWarehouses() {
     return new ArrayList<>(warehouses);
+  }
+
+  public ArrayList<Product> getAvailableProducts() {
+    return new ArrayList<>(products);
   }
 
   public void hireManager(String name, String description, String contactInfo, int age, String position, double salary) {
