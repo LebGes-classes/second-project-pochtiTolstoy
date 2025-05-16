@@ -10,6 +10,7 @@ import Person.Employee.Manager.Manager;
 import Person.Employee.Worker.Worker;
 import Storage.Warehouse.Warehouse;
 import Product.Product;
+import Util.ProductType;
 
 public class UI {
   private Company company;
@@ -89,10 +90,10 @@ public class UI {
         // moveProduct();
         break;
       case 3:
-        // purchaseProduct();
+        //purchaseProduct();
         break;
       case 4:
-        // cellProduct();
+        // sellProduct();
         break;
       case 5:
         listAvailableProducts();
@@ -155,8 +156,31 @@ public class UI {
     String description = readStringInput("Enter product description: ");
     double price = readDoubleInput("Enter product price: ");
     int quantity = readIntInput("Enter product quantity: ");
-    company.createProduct(name, description, price, quantity);
+    ProductType type = selectProductType("Select product type:");
+    company.createProduct(name, description, price, quantity, type);
     System.out.println("Product created successfully.");
+  }
+
+  private ProductType selectProductType(String prompt) {
+    showProductTypeMenu();
+    int choice = readIntInput("Enter your choice: ");
+    switch (choice) {
+      case 1:
+        return ProductType.ELECTRONICS;
+      case 2:
+        return ProductType.CLOTHING;
+      case 3:
+        return ProductType.BOOKS;
+      case 4:
+        return ProductType.FURNITURE;
+      case 5:
+        return ProductType.GROCERIES;
+      case 0:
+        return ProductType.UNKNOWN;
+      default:
+        System.out.println("Error: Invalid choice");
+        return ProductType.UNKNOWN;
+    }
   }
 
   private void listAvailableProducts() {
@@ -359,6 +383,16 @@ public class UI {
     System.out.println("1. Warehouse Management");
     System.out.println("2. Product Management");
     System.out.println("3. Employee Management");
+    System.out.println("0. Exit");
+  }
+
+  private void showProductTypeMenu() {
+    System.out.println("------Product type------");
+    System.out.println("1. " + ProductType.ELECTRONICS.toString());
+    System.out.println("2. " + ProductType.CLOTHING.toString());
+    System.out.println("3. " + ProductType.BOOKS.toString());
+    System.out.println("4. " + ProductType.FURNITURE.toString());
+    System.out.println("5. " + ProductType.GROCERIES.toString());
     System.out.println("0. Exit");
   }
 

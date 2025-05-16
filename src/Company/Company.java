@@ -12,6 +12,7 @@ import Person.Employee.Manager.Manager;
 import Person.Employee.Worker.Worker;
 import Storage.Cell.Cell;
 import Product.Product;
+import Util.ProductType;
 
 public class Company {
   private DataLoader dataLoader;
@@ -43,8 +44,8 @@ public class Company {
     saveData();
   }
 
-  public void createProduct(String name, String description, double price, int quantity) {
-    Product product = new Product(name, description, price, quantity);  
+  public void createProduct(String name, String description, double price, int quantity, ProductType type) {
+    Product product = new Product(name, description, price, quantity, type);  
     products.add(product);
     saveData();
   }
