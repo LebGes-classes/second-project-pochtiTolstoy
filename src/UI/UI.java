@@ -4,6 +4,7 @@ import Company.Company;
 
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 import Person.Employee.Employee;
 import Person.Employee.Manager.Manager;
@@ -14,6 +15,8 @@ import Util.ProductType;
 import Order.CompanyOrder.CompanyOrder;
 import Storage.Fabric.Fabric;
 import Storage.Cell.Cell;
+import Storage.SellPoint.SellPoint;
+import Person.Customer.Customer;
 
 public class UI {
   private Company company;
@@ -49,6 +52,15 @@ public class UI {
       case 4:
         processFabricMenu();
         break;
+      case 5:
+        processSellPointMenu();
+        break;
+      case 6:
+        processCustomerMenu();
+        break;
+      case 7:
+        showCompanyStatistics();
+        break;
       case 0:
         running = false;
         break;
@@ -70,13 +82,25 @@ public class UI {
         closeWarehouse();
         break;
       case 3:
-        listActiveWarehouses();
+        reopenWarehouse();
         break;
       case 4:
-        listAllWarehouses();
+        listActiveWarehouses();
         break;
       case 5:
+        listAllWarehouses();
+        break;
+      case 6:
         createCell();
+        break;
+      case 7:
+        changeWarehouseManager();
+        break;
+      case 8:
+        showWarehouseInfo();
+        break;
+      case 9:
+        showWarehouseProductsInfo();
         break;
       case 0:
         return;
@@ -93,7 +117,7 @@ public class UI {
         createProduct();
         break;
       case 2:
-        // moveProduct();
+        moveProduct();
         break;
       case 3:
         purchaseProduct();
@@ -103,6 +127,9 @@ public class UI {
         break;
       case 5:
         listAvailableProducts();
+        break;
+      case 6:
+        showAvailableProductsForPurchase();
         break;
       case 0:
         return;
@@ -119,7 +146,7 @@ public class UI {
         hireEmployee();
         break;
       case 2:
-        // fireEmployee();
+        fireEmployee();
         break;
       case 3:
         listActiveEmployees();
@@ -148,6 +175,70 @@ public class UI {
         break;
       default:
         System.out.println("Error: invalid menu option");
+    }
+  }
+
+  private void processSellPointMenu() {
+    showSellPointMenu();
+    int choice = readIntInput("Enter your choice: ");
+    switch (choice) {
+      case 1:
+        createSellPoint();
+        break;
+      case 2:
+        closeSellPoint();
+        break;
+      case 3:
+        listActiveSellPoints();
+        break;
+      case 4:
+        listAllSellPoints();
+        break;
+      case 5:
+        moveProductToSellPoint();
+        break;
+      case 6:
+        sellProductToCustomer();
+        break;
+      case 7:
+        returnProductFromCustomer();
+        break;
+      case 8:
+        changeSellPointManager();
+        break;
+      case 9:
+        showSellPointInfo();
+        break;
+      case 10:
+        showSellPointProductsInfo();
+        break;
+      case 11:
+        showSellPointProfitability();
+        break;
+      case 0:
+        return;
+      default:
+        System.out.println("Invalid choice. Please try again.");
+    }
+  }
+
+  private void processCustomerMenu() {
+    showCustomerMenu();
+    int choice = readIntInput("Enter your choice: ");
+    switch (choice) {
+      case 1:
+        addCustomer();
+        break;
+      case 2:
+        listActiveCustomers();
+        break;
+      case 3:
+        listAllCustomers();
+        break;
+      case 0:
+        return;
+      default:
+        System.out.println("Invalid choice. Please try again.");
     }
   }
 
@@ -208,7 +299,6 @@ public class UI {
       product = fabric.getProduct(order);
     }
 
-    // TODO : bind materialized product to warehouse and cell
     Warehouse warehouse = selectActiveWarehouse("Select active warehouse for storage: ");
     if (warehouse == null) {
       System.out.println("No available warehouse");
@@ -231,8 +321,8 @@ public class UI {
       return;
     }
 
-    company.storeProductInCell(cells.get(choice), product);
-    System.out.println("Product purchase is sucessfull.");
+    cells.get(choice).addProduct(product);
+    System.out.println("Product purchase is successful.");
   }
 
   private CompanyOrder createCompanyOrder() {
@@ -408,7 +498,14 @@ public class UI {
   }
 
   private void closeWarehouse() {
-    // TODO : select warehouse and close it
+    Warehouse warehouse = selectActiveWarehouse("Select warehouse to close: ");
+    if (warehouse == null) {
+      System.out.println("No available warehouse to close.");
+      return;
+    }
+
+    company.closeWarehouse(warehouse);
+    System.out.println("Warehouse closed successfully. All employees have been deactivated.");
   }
 
   private void listActiveWarehouses() {
@@ -517,11 +614,14 @@ public class UI {
   }
 
   private void showMainMenu() {
-    System.out.println("------Trading system------");
-    System.out.println("1. Warehouse management");
-    System.out.println("2. Product management");
-    System.out.println("3. Employee management");
-    System.out.println("4. Fabric managment");
+    System.out.println("\n=== Main Menu ===");
+    System.out.println("1. Warehouse Management");
+    System.out.println("2. Product Management");
+    System.out.println("3. Employee Management");
+    System.out.println("4. Fabric Management");
+    System.out.println("5. Sell Point Management");
+    System.out.println("6. Customer Management");
+    System.out.println("7. Company Statistics");
     System.out.println("0. Exit");
   }
 
@@ -542,24 +642,28 @@ public class UI {
     System.out.println("3. Purchase product");
     System.out.println("4. Sell product");
     System.out.println("5. List available products");
+    System.out.println("6. Available Products for Purchase");
     System.out.println("0. Exit");
   } 
 
   private void showWarehouseMenu() {
     System.out.println("------Warehouses------");
     System.out.println("1. Create Warehouse");
-    //System.out.println("2. Close Warehouse");
-    System.out.println("3. List Active Warehouses");
-    System.out.println("4. List All Warehouses");
-    System.out.println("5. Create Cell");
-    System.out.println("6. List All Warehouses");
+    System.out.println("2. Close Warehouse");
+    System.out.println("3. Reopen Warehouse");
+    System.out.println("4. List Active Warehouses");
+    System.out.println("5. List All Warehouses");
+    System.out.println("6. Create Cell");
+    System.out.println("7. Change Warehouse Manager");
+    System.out.println("8. Warehouse Information");
+    System.out.println("9. Warehouse Products Information");
     System.out.println("0. Exit");
   }
 
   private void showEmployeeMenu() {
     System.out.println("------Employee managment------");
     System.out.println("1. Hire employee");
-    //System.out.println("2. Fire employee");
+    System.out.println("2. Fire employee");
     System.out.println("3. List active employees");
     System.out.println("4. List all employees");
     System.out.println("0. Exit");
@@ -570,5 +674,650 @@ public class UI {
     System.out.println("1. Create fabric");
     System.out.println("2. List fabrics");
     System.out.println("0. Exit");
+  }
+
+  private void showSellPointMenu() {
+    System.out.println("\n=== Sell Point Management ===");
+    System.out.println("1. Create Sell Point");
+    System.out.println("2. Close Sell Point");
+    System.out.println("3. List Active Sell Points");
+    System.out.println("4. List All Sell Points");
+    System.out.println("5. Move Product to Sell Point");
+    System.out.println("6. Sell Product to Customer");
+    System.out.println("7. Return Product from Customer");
+    System.out.println("8. Change Sell Point Manager");
+    System.out.println("9. Sell Point Information");
+    System.out.println("10. Sell Point Products Information");
+    System.out.println("11. Sell Point Profitability");
+    System.out.println("0. Back to Main Menu");
+  }
+
+  private void createSellPoint() {
+    String name = readStringInput("Enter sell point name: ");
+    String description = readStringInput("Enter sell point description: ");
+    Manager manager = selectManager("Select sell point manager: ");
+    if (manager == null) {
+      System.out.println("An error arose when creating a sell point.");
+      return;
+    }
+
+    Worker worker = selectWorker("Select sell point worker: ");
+    if (worker == null) {
+      System.out.println("An error arose when creating a sell point.");
+      return;
+    }
+
+    company.createSellPoint(name, description, manager, worker);
+    System.out.println("Sell point created successfully.");
+  }
+
+  private void closeSellPoint() {
+    SellPoint sellPoint = selectActiveSellPoint("Select sell point to close: ");
+    if (sellPoint == null) {
+      System.out.println("No available sell point.");
+      return;
+    }
+
+    company.closeSellPoint(sellPoint);
+    System.out.println("Sell point closed successfully.");
+  }
+
+  private void listActiveSellPoints() {
+    ArrayList<SellPoint> sellPoints = company.getActiveSellPoints();
+    if (sellPoints.isEmpty()) {
+      System.out.println("No active sell points.");
+      return;
+    }
+
+    System.out.println("\nActive Sell Points:");
+    for (int i = 0; i < sellPoints.size(); i++) {
+      System.out.printf("%d. %s%n", i + 1, sellPoints.get(i));
+    }
+  }
+
+  private void listAllSellPoints() {
+    ArrayList<SellPoint> sellPoints = company.getAllSellPoints();
+    if (sellPoints.isEmpty()) {
+      System.out.println("No sell points.");
+      return;
+    }
+
+    System.out.println("\nAll Sell Points:");
+    for (int i = 0; i < sellPoints.size(); i++) {
+      System.out.printf("%d. %s%n", i + 1, sellPoints.get(i));
+    }
+  }
+
+  private void moveProductToSellPoint() {
+    Warehouse warehouse = selectActiveWarehouse("Select source warehouse: ");
+    if (warehouse == null) {
+      System.out.println("No available warehouse.");
+      return;
+    }
+
+    SellPoint sellPoint = selectActiveSellPoint("Select target sell point: ");
+    if (sellPoint == null) {
+      System.out.println("No available sell point.");
+      return;
+    }
+
+    Product product = selectProduct("Select product to move: ");
+    if (product == null) {
+      System.out.println("No available product.");
+      return;
+    }
+
+    int quantity = readIntInput("Enter quantity to move: ");
+    if (company.moveProductToSellPoint(product, quantity, warehouse, sellPoint)) {
+      System.out.println("Product moved successfully.");
+    } else {
+      System.out.println("Failed to move product.");
+    }
+  }
+
+  private void sellProductToCustomer() {
+    SellPoint sellPoint = selectActiveSellPoint("Select sell point: ");
+    if (sellPoint == null) {
+      System.out.println("No available sell point.");
+      return;
+    }
+
+    Product product = selectProduct("Select product to sell: ");
+    if (product == null) {
+      System.out.println("No available product.");
+      return;
+    }
+
+    int quantity = readIntInput("Enter quantity to sell: ");
+    Customer customer = selectCustomer("Select customer: ");
+    if (customer == null) {
+      System.out.println("No available customer.");
+      return;
+    }
+
+    if (company.sellProductToCustomer(product, quantity, sellPoint, customer)) {
+      System.out.println("Product sold successfully.");
+    } else {
+      System.out.println("Failed to sell product.");
+    }
+  }
+
+  private void returnProductFromCustomer() {
+    SellPoint sellPoint = selectActiveSellPoint("Select sell point: ");
+    if (sellPoint == null) {
+      System.out.println("No available sell point.");
+      return;
+    }
+
+    Customer customer = selectCustomer("Select customer: ");
+    if (customer == null) {
+      System.out.println("No available customer.");
+      return;
+    }
+
+    Product product = selectProduct("Select product to return: ");
+    if (product == null) {
+      System.out.println("No available product.");
+      return;
+    }
+
+    int quantity = readIntInput("Enter quantity to return: ");
+    if (company.returnProductFromCustomer(product, quantity, sellPoint, customer)) {
+      System.out.println("Product returned successfully.");
+    } else {
+      System.out.println("Failed to return product.");
+    }
+  }
+
+  private void showCompanyStatistics() {
+    System.out.println("\n=== Company Statistics ===");
+    System.out.printf("Total Revenue: %.2f%n", company.getTotalCompanyRevenue());
+    System.out.printf("Total Expenses: %.2f%n", company.getTotalCompanyExpenses());
+    System.out.printf("Total Profit: %.2f%n", company.getTotalCompanyProfit());
+    System.out.printf("Active Warehouses: %d%n", company.getActiveWarehouses().size());
+    System.out.printf("Active Sell Points: %d%n", company.getActiveSellPoints().size());
+    System.out.printf("Active Employees: %d%n", company.getActiveEmployees().size());
+  }
+
+  private SellPoint selectActiveSellPoint(String prompt) {
+    ArrayList<SellPoint> sellPoints = company.getActiveSellPoints();
+    if (sellPoints.isEmpty()) {
+      return null;
+    }
+
+    System.out.println(prompt);
+    for (int i = 0; i < sellPoints.size(); i++) {
+      System.out.printf("%d. %s%n", i + 1, sellPoints.get(i));
+    }
+
+    int choice = readIntInput("Enter choice: ") - 1;
+    if (choice < 0 || choice >= sellPoints.size()) {
+      return null;
+    }
+
+    return sellPoints.get(choice);
+  }
+
+  private Customer selectCustomer(String prompt) {
+    ArrayList<Customer> customers = company.getAllCustomers();
+    if (customers.isEmpty()) {
+      return null;
+    }
+
+    System.out.println(prompt);
+    for (int i = 0; i < customers.size(); i++) {
+      System.out.printf("%d. %s%n", i + 1, customers.get(i));
+    }
+
+    int choice = readIntInput("Enter choice: ") - 1;
+    if (choice < 0 || choice >= customers.size()) {
+      return null;
+    }
+
+    return customers.get(choice);
+  }
+
+  private void showCustomerMenu() {
+    System.out.println("\n=== Customer Management ===");
+    System.out.println("1. Add Customer");
+    System.out.println("2. List Active Customers");
+    System.out.println("3. List All Customers");
+    System.out.println("0. Back to Main Menu");
+  }
+
+  private void addCustomer() {
+    String name = readStringInput("Enter customer name: ");
+    String description = readStringInput("Enter customer description: ");
+    String contactInfo = readStringInput("Enter customer contact info: ");
+    int age = readIntInput("Enter customer age: ");
+
+    company.addCustomer(name, description, contactInfo, age);
+    System.out.println("Customer added successfully.");
+  }
+
+  private void listActiveCustomers() {
+    ArrayList<Customer> customers = company.getActiveCustomers();
+    if (customers.isEmpty()) {
+      System.out.println("No active customers.");
+      return;
+    }
+
+    System.out.println("\nActive Customers:");
+    for (int i = 0; i < customers.size(); i++) {
+      System.out.printf("%d. %s%n", i + 1, customers.get(i));
+    }
+  }
+
+  private void listAllCustomers() {
+    ArrayList<Customer> customers = company.getAllCustomers();
+    if (customers.isEmpty()) {
+      System.out.println("No customers.");
+      return;
+    }
+
+    System.out.println("\nAll Customers:");
+    for (int i = 0; i < customers.size(); i++) {
+      System.out.printf("%d. %s%n", i + 1, customers.get(i));
+    }
+  }
+
+  private void reopenWarehouse() {
+    // First, find an inactive warehouse
+    ArrayList<Warehouse> inactiveWarehouses = company.getAllWarehouses().stream()
+        .filter(warehouse -> !warehouse.isActive())
+        .collect(Collectors.toCollection(ArrayList::new));
+
+    if (inactiveWarehouses.isEmpty()) {
+      System.out.println("No inactive warehouses available to reopen.");
+      return;
+    }
+
+    System.out.println("Select warehouse to reopen:");
+    for (int i = 0; i < inactiveWarehouses.size(); i++) {
+      System.out.printf("%d. %s%n", i + 1, inactiveWarehouses.get(i));
+    }
+
+    int choice = readIntInput("Enter warehouse number: ") - 1;
+    if (choice < 0 || choice >= inactiveWarehouses.size()) {
+      System.out.println("Invalid warehouse selection.");
+      return;
+    }
+
+    Warehouse warehouse = inactiveWarehouses.get(choice);
+
+    // Get inactive manager
+    ArrayList<Manager> inactiveManagers = company.getInactiveManagers();
+    if (inactiveManagers.isEmpty()) {
+      System.out.println("No inactive managers available. Cannot reopen warehouse.");
+      return;
+    }
+
+    System.out.println("Select manager for the warehouse:");
+    for (int i = 0; i < inactiveManagers.size(); i++) {
+      System.out.printf("%d. %s%n", i + 1, inactiveManagers.get(i));
+    }
+
+    int managerChoice = readIntInput("Enter manager number: ") - 1;
+    if (managerChoice < 0 || managerChoice >= inactiveManagers.size()) {
+      System.out.println("Invalid manager selection.");
+      return;
+    }
+
+    Manager manager = inactiveManagers.get(managerChoice);
+
+    // Get inactive worker
+    ArrayList<Worker> inactiveWorkers = company.getInactiveWorkers();
+    if (inactiveWorkers.isEmpty()) {
+      System.out.println("No inactive workers available. Cannot reopen warehouse.");
+      return;
+    }
+
+    System.out.println("Select worker for the warehouse:");
+    for (int i = 0; i < inactiveWorkers.size(); i++) {
+      System.out.printf("%d. %s%n", i + 1, inactiveWorkers.get(i));
+    }
+
+    int workerChoice = readIntInput("Enter worker number: ") - 1;
+    if (workerChoice < 0 || workerChoice >= inactiveWorkers.size()) {
+      System.out.println("Invalid worker selection.");
+      return;
+    }
+
+    Worker worker = inactiveWorkers.get(workerChoice);
+
+    if (company.reopenWarehouse(warehouse, manager, worker)) {
+      System.out.println("Warehouse reopened successfully.");
+    } else {
+      System.out.println("Failed to reopen warehouse.");
+    }
+  }
+
+  private void fireEmployee() {
+    // First, get the active employee to fire
+    ArrayList<Employee> activeEmployees = company.getActiveEmployees();
+    if (activeEmployees.isEmpty()) {
+      System.out.println("No active employees to fire.");
+      return;
+    }
+
+    System.out.println("Select employee to fire:");
+    for (int i = 0; i < activeEmployees.size(); i++) {
+      System.out.printf("%d. %s%n", i + 1, activeEmployees.get(i));
+    }
+
+    int choice = readIntInput("Enter employee number: ") - 1;
+    if (choice < 0 || choice >= activeEmployees.size()) {
+      System.out.println("Invalid employee selection.");
+      return;
+    }
+
+    Employee employeeToFire = activeEmployees.get(choice);
+
+    // Check if there are inactive employees of the same type
+    ArrayList<Employee> inactiveEmployees = new ArrayList<>();
+    if (employeeToFire instanceof Manager) {
+      inactiveEmployees.addAll(company.getInactiveManagers());
+    } else if (employeeToFire instanceof Worker) {
+      inactiveEmployees.addAll(company.getInactiveWorkers());
+    }
+
+    if (inactiveEmployees.isEmpty()) {
+      System.out.println("No inactive employees available to replace the fired employee.");
+      return;
+    }
+
+    System.out.println("Select replacement employee:");
+    for (int i = 0; i < inactiveEmployees.size(); i++) {
+      System.out.printf("%d. %s%n", i + 1, inactiveEmployees.get(i));
+    }
+
+    int replacementChoice = readIntInput("Enter replacement employee number: ") - 1;
+    if (replacementChoice < 0 || replacementChoice >= inactiveEmployees.size()) {
+      System.out.println("Invalid replacement employee selection.");
+      return;
+    }
+
+    Employee replacementEmployee = inactiveEmployees.get(replacementChoice);
+
+    if (company.replaceEmployee(employeeToFire, replacementEmployee)) {
+      System.out.println("Employee replaced successfully.");
+    } else {
+      System.out.println("Failed to replace employee.");
+    }
+  }
+
+  private void changeWarehouseManager() {
+    // First, select an active warehouse
+    Warehouse warehouse = selectActiveWarehouse("Select warehouse to change manager: ");
+    if (warehouse == null) {
+      System.out.println("No active warehouses available.");
+      return;
+    }
+
+    // Get inactive managers
+    ArrayList<Manager> inactiveManagers = company.getInactiveManagers();
+    if (inactiveManagers.isEmpty()) {
+      System.out.println("No inactive managers available for replacement.");
+      return;
+    }
+
+    System.out.println("Select new manager:");
+    for (int i = 0; i < inactiveManagers.size(); i++) {
+      System.out.printf("%d. %s%n", i + 1, inactiveManagers.get(i));
+    }
+
+    int choice = readIntInput("Enter manager number: ") - 1;
+    if (choice < 0 || choice >= inactiveManagers.size()) {
+      System.out.println("Invalid manager selection.");
+      return;
+    }
+
+    Manager newManager = inactiveManagers.get(choice);
+
+    if (company.changeWarehouseManager(warehouse, newManager)) {
+      System.out.println("Warehouse manager changed successfully.");
+    } else {
+      System.out.println("Failed to change warehouse manager.");
+    }
+  }
+
+  private void changeSellPointManager() {
+    // First, select an active sell point
+    SellPoint sellPoint = selectActiveSellPoint("Select sell point to change manager: ");
+    if (sellPoint == null) {
+      System.out.println("No active sell points available.");
+      return;
+    }
+
+    // Get inactive managers
+    ArrayList<Manager> inactiveManagers = company.getInactiveManagers();
+    if (inactiveManagers.isEmpty()) {
+      System.out.println("No inactive managers available for replacement.");
+      return;
+    }
+
+    System.out.println("Select new manager:");
+    for (int i = 0; i < inactiveManagers.size(); i++) {
+      System.out.printf("%d. %s%n", i + 1, inactiveManagers.get(i));
+    }
+
+    int choice = readIntInput("Enter manager number: ") - 1;
+    if (choice < 0 || choice >= inactiveManagers.size()) {
+      System.out.println("Invalid manager selection.");
+      return;
+    }
+
+    Manager newManager = inactiveManagers.get(choice);
+
+    if (company.changeSellPointManager(sellPoint, newManager)) {
+      System.out.println("Sell point manager changed successfully.");
+    } else {
+      System.out.println("Failed to change sell point manager.");
+    }
+  }
+
+  private void moveProduct() {
+    // Select source warehouse
+    Warehouse sourceWarehouse = selectActiveWarehouse("Select source warehouse: ");
+    if (sourceWarehouse == null) {
+      System.out.println("No active warehouses available.");
+      return;
+    }
+
+    // Select source cell
+    Cell sourceCell = selectCellWithProducts(sourceWarehouse, "Select source cell: ");
+    if (sourceCell == null) {
+      System.out.println("No cells with products available in the source warehouse.");
+      return;
+    }
+
+    // Select product from source cell
+    Product product = selectProductFromCell(sourceCell, "Select product to move: ");
+    if (product == null) {
+      System.out.println("No products available in the selected cell.");
+      return;
+    }
+
+    // Get available quantity
+    int availableQuantity = sourceCell.getProductQuantity(product);
+    System.out.printf("Available quantity: %d%n", availableQuantity);
+
+    // Get quantity to move
+    int quantity = readIntInput("Enter quantity to move: ");
+    if (quantity <= 0 || quantity > availableQuantity) {
+      System.out.println("Invalid quantity.");
+      return;
+    }
+
+    // Select target warehouse
+    Warehouse targetWarehouse = selectActiveWarehouse("Select target warehouse: ");
+    if (targetWarehouse == null) {
+      System.out.println("No active warehouses available.");
+      return;
+    }
+
+    // Select target cell
+    Cell targetCell = selectCellWithCapacity(targetWarehouse, quantity, "Select target cell: ");
+    if (targetCell == null) {
+      System.out.println("No cells with sufficient capacity available in the target warehouse.");
+      return;
+    }
+
+    // Move the product
+    if (company.moveProductBetweenWarehouses(product, quantity, sourceWarehouse, sourceCell, targetWarehouse, targetCell)) {
+      System.out.println("Product moved successfully.");
+    } else {
+      System.out.println("Failed to move product.");
+    }
+  }
+
+  private Cell selectCellWithProducts(Warehouse warehouse, String prompt) {
+    ArrayList<Cell> cells = warehouse.getCells();
+    ArrayList<Cell> cellsWithProducts = new ArrayList<>();
+
+    for (Cell cell : cells) {
+      if (!cell.getProducts().isEmpty()) {
+        cellsWithProducts.add(cell);
+      }
+    }
+
+    if (cellsWithProducts.isEmpty()) {
+      return null;
+    }
+
+    System.out.println(prompt);
+    for (int i = 0; i < cellsWithProducts.size(); i++) {
+      Cell cell = cellsWithProducts.get(i);
+      System.out.printf("%d. %s (Products: %d)%n", 
+          i + 1, cell, cell.getProducts().size());
+    }
+
+    int choice = readIntInput("Enter cell number: ") - 1;
+    if (choice < 0 || choice >= cellsWithProducts.size()) {
+      System.out.println("Invalid cell selection.");
+      return null;
+    }
+
+    return cellsWithProducts.get(choice);
+  }
+
+  private Cell selectCellWithCapacity(Warehouse warehouse, int requiredCapacity, String prompt) {
+    ArrayList<Cell> cells = warehouse.getCells();
+    ArrayList<Cell> cellsWithCapacity = new ArrayList<>();
+
+    for (Cell cell : cells) {
+      if (cell.getAvailableCapacity() >= requiredCapacity) {
+        cellsWithCapacity.add(cell);
+      }
+    }
+
+    if (cellsWithCapacity.isEmpty()) {
+      return null;
+    }
+
+    System.out.println(prompt);
+    for (int i = 0; i < cellsWithCapacity.size(); i++) {
+      Cell cell = cellsWithCapacity.get(i);
+      System.out.printf("%d. %s (Available capacity: %d)%n", 
+          i + 1, cell, cell.getAvailableCapacity());
+    }
+
+    int choice = readIntInput("Enter cell number: ") - 1;
+    if (choice < 0 || choice >= cellsWithCapacity.size()) {
+      System.out.println("Invalid cell selection.");
+      return null;
+    }
+
+    return cellsWithCapacity.get(choice);
+  }
+
+  private Product selectProductFromCell(Cell cell, String prompt) {
+    ArrayList<Product> products = new ArrayList<>(cell.getProducts());
+    if (products.isEmpty()) {
+      return null;
+    }
+
+    System.out.println(prompt);
+    for (int i = 0; i < products.size(); i++) {
+      Product product = products.get(i);
+      System.out.printf("%d. %s (Quantity: %d)%n", 
+          i + 1, product, cell.getProductQuantity(product));
+    }
+
+    int choice = readIntInput("Enter product number: ") - 1;
+    if (choice < 0 || choice >= products.size()) {
+      System.out.println("Invalid product selection.");
+      return null;
+    }
+
+    return products.get(choice);
+  }
+
+  private void showWarehouseInfo() {
+    Warehouse warehouse = selectWarehouse("Select warehouse to view information: ");
+    if (warehouse == null) {
+      System.out.println("No warehouses available.");
+      return;
+    }
+    System.out.println(company.getWarehouseInfo(warehouse));
+  }
+
+  private void showWarehouseProductsInfo() {
+    Warehouse warehouse = selectWarehouse("Select warehouse to view products: ");
+    if (warehouse == null) {
+      System.out.println("No warehouses available.");
+      return;
+    }
+    System.out.println(company.getWarehouseProductsInfo(warehouse));
+  }
+
+  private void showSellPointInfo() {
+    SellPoint sellPoint = selectSellPoint("Select sell point to view information: ");
+    if (sellPoint == null) {
+      System.out.println("No sell points available.");
+      return;
+    }
+    System.out.println(company.getSellPointInfo(sellPoint));
+  }
+
+  private void showSellPointProductsInfo() {
+    SellPoint sellPoint = selectSellPoint("Select sell point to view products: ");
+    if (sellPoint == null) {
+      System.out.println("No sell points available.");
+      return;
+    }
+    System.out.println(company.getSellPointProductsInfo(sellPoint));
+  }
+
+  private void showSellPointProfitability() {
+    SellPoint sellPoint = selectSellPoint("Select sell point to view profitability: ");
+    if (sellPoint == null) {
+      System.out.println("No sell points available.");
+      return;
+    }
+    System.out.println(company.getSellPointInfo(sellPoint));
+  }
+
+  private void showAvailableProductsForPurchase() {
+    System.out.println(company.getAvailableProductsForPurchase());
+  }
+
+  private SellPoint selectSellPoint(String prompt) {
+    ArrayList<SellPoint> sellPoints = company.getAllSellPoints();
+    if (sellPoints.isEmpty()) {
+      return null;
+    }
+
+    System.out.println(prompt);
+    for (int i = 0; i < sellPoints.size(); i++) {
+      System.out.printf("%d. %s%n", i + 1, sellPoints.get(i));
+    }
+
+    int choice = readIntInput("Enter choice: ") - 1;
+    if (choice < 0 || choice >= sellPoints.size()) {
+      return null;
+    }
+
+    return sellPoints.get(choice);
   }
 }

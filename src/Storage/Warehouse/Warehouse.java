@@ -30,6 +30,12 @@ public class Warehouse extends Entity implements Serializable {
     return new ArrayList<>(cells);
   }
 
+  public int getTotalProducts() {
+    return cells.stream()
+        .mapToInt(cell -> cell.getProducts().size())
+        .sum();
+  }
+
   public void addCell(Cell cell) {
     cells.add(cell);
   }
@@ -70,14 +76,18 @@ public class Warehouse extends Entity implements Serializable {
     isActive = active;
   }
 
+  public Worker getWorker() {
+    return workers.isEmpty() ? null : workers.get(0);
+  }
+
   @Override
   public String toString() {
-    // TODO : capacity
     String managerName = (manager != null) ? manager.getName() : "none";
+    String workerName = (getWorker() != null) ? getWorker().getName() : "none";
     return String.format(
-        "Warehouse [ id = %s, name = %s, manager = %s, workers = %s, " +
-        "active = %b, cells = %d, capacity = %d/%d ]",
-        getId(), getName(), managerName, workers.size(), 
-        isActive, cells.size(), -1, -1);
+        "Warehouse [ id = %s, name = %s, manager = %s, worker = %s, " +
+        "active = %b, cells = %d ]",
+        getId(), getName(), managerName, workerName, 
+        isActive, cells.size());
   }
 }
