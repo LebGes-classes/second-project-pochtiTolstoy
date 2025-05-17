@@ -1,0 +1,132 @@
+@startuml Class Inheritance
+
+' Base Entity
+abstract class Entity {
+  # id: UUID
+  # name: String
+  # description: String
+}
+
+' Person hierarchy
+abstract class Person extends Entity {
+  # contactInfo: String
+  # age: int
+  # isActive: boolean
+}
+
+abstract class Employee extends Person {
+  # position: String
+  # salary: double
+}
+
+class Manager extends Employee {
+  - warehouse: Warehouse
+}
+
+class Worker extends Employee {
+  - warehouse: Warehouse
+}
+
+class Customer extends Person {
+  - purchases: Map<Product, Integer>
+  - isActive: boolean
+}
+
+' Storage hierarchy
+class Warehouse extends Entity {
+  - cells: ArrayList<Cell>
+  - workers: ArrayList<Worker>
+  - manager: Manager
+  - isActive: boolean
+}
+
+class SellPoint extends Entity {
+  - cells: ArrayList<Cell>
+  - manager: Manager
+  - worker: Worker
+  - isActive: boolean
+  - totalRevenue: double
+  - totalExpenses: double
+}
+
+class Cell extends Entity {
+  - products: ArrayList<Product>
+  - capacity: int
+}
+
+' Product hierarchy
+class Product extends Entity {
+  - price: double
+  - quantity: int
+  - type: ProductType
+}
+
+class Fabric extends Entity {
+  - productType: ProductType
+  - timeToProduce: int
+  - product: Product
+  - productReady: boolean
+}
+
+' Order hierarchy
+class Order {
+  # id: String
+}
+
+class CompanyOrder extends Order {
+  - product: Product
+  - quantity: int
+}
+
+class CustomerOrder extends Order {
+  - customer: Customer
+  - products: ArrayList<Product>
+}
+
+' DataLoader hierarchy
+interface DataLoader {
+  + saveWarehouses(ArrayList<Warehouse>)
+  + saveSellPoints(ArrayList<SellPoint>)
+  + saveEmployees(ArrayList<Employee>)
+  + saveCustomers(ArrayList<Customer>)
+  + saveProducts(ArrayList<Product>)
+  + saveFabrics(ArrayList<Fabric>)
+  + loadWarehouses(): ArrayList<Warehouse>
+  + loadSellPoints(): ArrayList<SellPoint>
+  + loadEmployees(): ArrayList<Employee>
+  + loadCustomers(): ArrayList<Customer>
+  + loadProducts(): ArrayList<Product>
+  + loadFabrics(): ArrayList<Fabric>
+}
+
+class DataLoaderImpl implements DataLoader {
+  - DATA_DIR: String
+  - WAREHOUSES_FILE: String
+  - SELL_POINTS_FILE: String
+  - EMPLOYEES_FILE: String
+  - CUSTOMERS_FILE: String
+  - PRODUCTS_FILE: String
+  - FABRICS_FILE: String
+}
+
+' Main classes (no inheritance)
+class Company {
+  - dataLoader: DataLoader
+  - warehouses: ArrayList<Warehouse>
+  - sellPoints: ArrayList<SellPoint>
+  - employees: ArrayList<Employee>
+  - customers: ArrayList<Customer>
+  - products: ArrayList<Product>
+  - fabrics: ArrayList<Fabric>
+}
+
+class UI {
+  - company: Company
+  - scanner: Scanner
+}
+
+' Style
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+
+@enduml 
