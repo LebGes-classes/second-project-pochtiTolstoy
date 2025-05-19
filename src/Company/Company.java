@@ -1,19 +1,18 @@
 package Company;
 
-import java.util.ArrayList;
-import java.util.stream.Collectors;
-
 import DataLoader.DataLoader;
-import Storage.Warehouse.Warehouse;
-import Storage.SellPoint.SellPoint;
-import Person.Employee.Employee;
 import Person.Customer.Customer;
+import Person.Employee.Employee;
 import Person.Employee.Manager.Manager;
 import Person.Employee.Worker.Worker;
-import Storage.Cell.Cell;
 import Product.Product;
-import Util.ProductType;
+import Storage.Cell.Cell;
 import Storage.Fabric.Fabric;
+import Storage.SellPoint.SellPoint;
+import Storage.Warehouse.Warehouse;
+import Util.ProductType;
+import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 public class Company {
   private DataLoader dataLoader;
@@ -34,34 +33,37 @@ public class Company {
     fabrics = dataLoader.loadFabrics();
   }
 
-  public void createWarehouse(String name, String description, 
-      Manager manager, Worker worker) {
+  public void createWarehouse(String name, String description, Manager manager,
+                              Worker worker) {
     Warehouse warehouse = new Warehouse(name, description, manager, worker);
     warehouses.add(warehouse);
     saveData();
   }
 
-  public void createCell(String name, String description, int capacity, Warehouse warehouse) {
+  public void createCell(String name, String description, int capacity,
+                         Warehouse warehouse) {
     Cell cell = new Cell(name, description, capacity);
     warehouse.addCell(cell);
     saveData();
   }
 
-  public void createSellPoint(String name, String description, 
-      Manager manager, Worker worker) {
+  public void createSellPoint(String name, String description, Manager manager,
+                              Worker worker) {
     SellPoint sellPoint = new SellPoint(name, description, manager, worker);
     sellPoints.add(sellPoint);
     saveData();
   }
 
-  public void createProduct(String name, String description, double price, int quantity, ProductType type) {
-    Product product = new Product(name, description, price, quantity, type);  
+  public void createProduct(String name, String description, double price,
+                            int quantity, ProductType type) {
+    Product product = new Product(name, description, price, quantity, type);
     products.add(product);
     saveData();
   }
 
   public void createFabric(String name, String description, ProductType type) {
-    Fabric fabric = new Fabric(name, description, type, type.getTimeToProduce());
+    Fabric fabric =
+        new Fabric(name, description, type, type.getTimeToProduce());
     fabrics.add(fabric);
     saveData();
   }
@@ -81,8 +83,8 @@ public class Company {
 
   public ArrayList<Warehouse> getActiveWarehouses() {
     return warehouses.stream()
-      .filter(Warehouse::isActive)
-      .collect(Collectors.toCollection(ArrayList::new));
+        .filter(Warehouse::isActive)
+        .collect(Collectors.toCollection(ArrayList::new));
   }
 
   public ArrayList<Warehouse> getAllWarehouses() {
@@ -91,8 +93,8 @@ public class Company {
 
   public ArrayList<SellPoint> getActiveSellPoints() {
     return sellPoints.stream()
-      .filter(SellPoint::isActive)
-      .collect(Collectors.toCollection(ArrayList::new));
+        .filter(SellPoint::isActive)
+        .collect(Collectors.toCollection(ArrayList::new));
   }
 
   public ArrayList<SellPoint> getAllSellPoints() {
@@ -103,14 +105,18 @@ public class Company {
     return new ArrayList<>(products);
   }
 
-  public void hireManager(String name, String description, String contactInfo, int age, String position, double salary) {
-    Employee employee = new Manager(name, description, contactInfo, age, position, salary);
+  public void hireManager(String name, String description, String contactInfo,
+                          int age, String position, double salary) {
+    Employee employee =
+        new Manager(name, description, contactInfo, age, position, salary);
     employees.add(employee);
     saveData();
   }
 
-  public void hireWorker(String name, String description, String contactInfo, int age, String position, double salary) {
-    Employee employee = new Worker(name, description, contactInfo, age, position, salary);
+  public void hireWorker(String name, String description, String contactInfo,
+                         int age, String position, double salary) {
+    Employee employee =
+        new Worker(name, description, contactInfo, age, position, salary);
     employees.add(employee);
     saveData();
   }
@@ -122,24 +128,25 @@ public class Company {
   }
 
   public boolean replaceEmployee(Employee oldEmployee, Employee newEmployee) {
-    if (oldEmployee == null || newEmployee == null || !oldEmployee.isActive() || newEmployee.isActive()) {
+    if (oldEmployee == null || newEmployee == null || !oldEmployee.isActive() ||
+        newEmployee.isActive()) {
       return false;
     }
 
     // Find and update the employee in all warehouses
     for (Warehouse warehouse : warehouses) {
       if (warehouse.getManager() == oldEmployee) {
-        warehouse.setManager((Manager) newEmployee);
+        warehouse.setManager((Manager)newEmployee);
       }
       if (warehouse.getWorker() == oldEmployee) {
-        warehouse.addWorker((Worker) newEmployee);
+        warehouse.addWorker((Worker)newEmployee);
       }
     }
 
     // Find and update the employee in all sell points
     for (SellPoint sellPoint : sellPoints) {
       if (sellPoint.getManager() == oldEmployee) {
-        sellPoint.setManager((Manager) newEmployee);
+        sellPoint.setManager((Manager)newEmployee);
       }
     }
 
@@ -161,33 +168,33 @@ public class Company {
 
   public ArrayList<Manager> getInactiveManagers() {
     return employees.stream()
-      .filter(employee -> employee instanceof Manager)
-      .map(employee -> (Manager) employee)
-      .filter(manager -> !manager.isActive())
-      .collect(Collectors.toCollection(ArrayList::new));
+        .filter(employee -> employee instanceof Manager)
+        .map(employee -> (Manager)employee)
+        .filter(manager -> !manager.isActive())
+        .collect(Collectors.toCollection(ArrayList::new));
   }
 
   public ArrayList<Worker> getInactiveWorkers() {
     return employees.stream()
-      .filter(employee -> employee instanceof Worker)
-      .map(employee -> (Worker) employee)
-      .filter(worker -> !worker.isActive())
-      .collect(Collectors.toCollection(ArrayList::new));
+        .filter(employee -> employee instanceof Worker)
+        .map(employee -> (Worker)employee)
+        .filter(worker -> !worker.isActive())
+        .collect(Collectors.toCollection(ArrayList::new));
   }
 
-  public ArrayList<Fabric> getAllFabrics() {
-    return new ArrayList<>(fabrics);
-  }
+  public ArrayList<Fabric> getAllFabrics() { return new ArrayList<>(fabrics); }
 
-  public boolean moveProductToSellPoint(Product product, int quantity, 
-      Warehouse warehouse, SellPoint sellPoint) {
+  public boolean moveProductToSellPoint(Product product, int quantity,
+                                        Warehouse warehouse,
+                                        SellPoint sellPoint) {
     if (!warehouse.isActive() || !sellPoint.isActive()) {
       return false;
     }
 
     Cell sourceCell = null;
     for (Cell cell : warehouse.getCells()) {
-      if (cell.hasProduct(product) && cell.getProductQuantity(product) >= quantity) {
+      if (cell.hasProduct(product) &&
+          cell.getProductQuantity(product) >= quantity) {
         sourceCell = cell;
         break;
       }
@@ -206,8 +213,8 @@ public class Company {
     }
 
     if (targetCell == null) {
-      targetCell = new Cell("Cell-" + sellPoint.getCells().size(), 
-                          "Auto-created cell", quantity);
+      targetCell = new Cell("Cell-" + sellPoint.getCells().size(),
+                            "Auto-created cell", quantity);
       sellPoint.addCell(targetCell);
     }
 
@@ -218,14 +225,17 @@ public class Company {
   }
 
   public boolean moveProductBetweenWarehouses(Product product, int quantity,
-      Warehouse sourceWarehouse, Cell sourceCell,
-      Warehouse targetWarehouse, Cell targetCell) {
+                                              Warehouse sourceWarehouse,
+                                              Cell sourceCell,
+                                              Warehouse targetWarehouse,
+                                              Cell targetCell) {
     if (!sourceWarehouse.isActive() || !targetWarehouse.isActive()) {
       return false;
     }
 
     // Verify source cell has enough products
-    if (!sourceCell.hasProduct(product) || sourceCell.getProductQuantity(product) < quantity) {
+    if (!sourceCell.hasProduct(product) ||
+        sourceCell.getProductQuantity(product) < quantity) {
       return false;
     }
 
@@ -241,8 +251,8 @@ public class Company {
     return true;
   }
 
-  public boolean sellProductToCustomer(Product product, int quantity, 
-      SellPoint sellPoint, Customer customer) {
+  public boolean sellProductToCustomer(Product product, int quantity,
+                                       SellPoint sellPoint, Customer customer) {
     if (!sellPoint.isActive()) {
       return false;
     }
@@ -255,8 +265,9 @@ public class Company {
     return false;
   }
 
-  public boolean returnProductFromCustomer(Product product, int quantity, 
-      SellPoint sellPoint, Customer customer) {
+  public boolean returnProductFromCustomer(Product product, int quantity,
+                                           SellPoint sellPoint,
+                                           Customer customer) {
     if (!sellPoint.isActive()) {
       return false;
     }
@@ -270,15 +281,11 @@ public class Company {
   }
 
   public double getTotalCompanyRevenue() {
-    return sellPoints.stream()
-      .mapToDouble(SellPoint::getTotalRevenue)
-      .sum();
+    return sellPoints.stream().mapToDouble(SellPoint::getTotalRevenue).sum();
   }
 
   public double getTotalCompanyExpenses() {
-    return sellPoints.stream()
-      .mapToDouble(SellPoint::getTotalExpenses)
-      .sum();
+    return sellPoints.stream().mapToDouble(SellPoint::getTotalExpenses).sum();
   }
 
   public double getTotalCompanyProfit() {
@@ -295,13 +302,15 @@ public class Company {
         .collect(Collectors.toCollection(ArrayList::new));
   }
 
-  public void addCustomer(String name, String description, String contactInfo, int age) {
+  public void addCustomer(String name, String description, String contactInfo,
+                          int age) {
     Customer customer = new Customer(name, description, contactInfo, age);
     customers.add(customer);
     saveData();
   }
 
-  public boolean reopenWarehouse(Warehouse warehouse, Manager manager, Worker worker) {
+  public boolean reopenWarehouse(Warehouse warehouse, Manager manager,
+                                 Worker worker) {
     if (manager == null || worker == null) {
       return false;
     }
@@ -315,8 +324,10 @@ public class Company {
     return true;
   }
 
-  public boolean changeWarehouseManager(Warehouse warehouse, Manager newManager) {
-    if (warehouse == null || newManager == null || !warehouse.isActive() || newManager.isActive()) {
+  public boolean changeWarehouseManager(Warehouse warehouse,
+                                        Manager newManager) {
+    if (warehouse == null || newManager == null || !warehouse.isActive() ||
+        newManager.isActive()) {
       return false;
     }
 
@@ -328,8 +339,10 @@ public class Company {
     return true;
   }
 
-  public boolean changeSellPointManager(SellPoint sellPoint, Manager newManager) {
-    if (sellPoint == null || newManager == null || !sellPoint.isActive() || newManager.isActive()) {
+  public boolean changeSellPointManager(SellPoint sellPoint,
+                                        Manager newManager) {
+    if (sellPoint == null || newManager == null || !sellPoint.isActive() ||
+        newManager.isActive()) {
       return false;
     }
 
@@ -345,12 +358,20 @@ public class Company {
     StringBuilder info = new StringBuilder();
     info.append("Warehouse Information:\n");
     info.append("Name: ").append(warehouse.getName()).append("\n");
-    info.append("Description: ").append(warehouse.getDescription()).append("\n");
-    info.append("Status: ").append(warehouse.isActive() ? "Active" : "Inactive").append("\n");
+    info.append("Description: ")
+        .append(warehouse.getDescription())
+        .append("\n");
+    info.append("Status: ")
+        .append(warehouse.isActive() ? "Active" : "Inactive")
+        .append("\n");
     info.append("Manager: ").append(warehouse.getManager()).append("\n");
     info.append("Worker: ").append(warehouse.getWorker()).append("\n");
-    info.append("Total Cells: ").append(warehouse.getCells().size()).append("\n");
-    info.append("Total Products: ").append(warehouse.getTotalProducts()).append("\n");
+    info.append("Total Cells: ")
+        .append(warehouse.getCells().size())
+        .append("\n");
+    info.append("Total Products: ")
+        .append(warehouse.getTotalProducts())
+        .append("\n");
     return info.toString();
   }
 
@@ -358,26 +379,45 @@ public class Company {
     StringBuilder info = new StringBuilder();
     info.append("Sell Point Information:\n");
     info.append("Name: ").append(sellPoint.getName()).append("\n");
-    info.append("Description: ").append(sellPoint.getDescription()).append("\n");
-    info.append("Status: ").append(sellPoint.isActive() ? "Active" : "Inactive").append("\n");
+    info.append("Description: ")
+        .append(sellPoint.getDescription())
+        .append("\n");
+    info.append("Status: ")
+        .append(sellPoint.isActive() ? "Active" : "Inactive")
+        .append("\n");
     info.append("Manager: ").append(sellPoint.getManager()).append("\n");
-    info.append("Total Cells: ").append(sellPoint.getCells().size()).append("\n");
-    info.append("Total Products: ").append(sellPoint.getTotalProducts()).append("\n");
-    info.append("Total Revenue: ").append(sellPoint.getTotalRevenue()).append("\n");
-    info.append("Total Expenses: ").append(sellPoint.getTotalExpenses()).append("\n");
-    info.append("Total Profit: ").append(sellPoint.getTotalRevenue() - sellPoint.getTotalExpenses()).append("\n");
+    info.append("Total Cells: ")
+        .append(sellPoint.getCells().size())
+        .append("\n");
+    info.append("Total Products: ")
+        .append(sellPoint.getTotalProducts())
+        .append("\n");
+    info.append("Total Revenue: ")
+        .append(sellPoint.getTotalRevenue())
+        .append("\n");
+    info.append("Total Expenses: ")
+        .append(sellPoint.getTotalExpenses())
+        .append("\n");
+    info.append("Total Profit: ")
+        .append(sellPoint.getTotalRevenue() - sellPoint.getTotalExpenses())
+        .append("\n");
     return info.toString();
   }
 
   public String getWarehouseProductsInfo(Warehouse warehouse) {
     StringBuilder info = new StringBuilder();
-    info.append("Products in Warehouse ").append(warehouse.getName()).append(":\n");
+    info.append("Products in Warehouse ")
+        .append(warehouse.getName())
+        .append(":\n");
     for (Cell cell : warehouse.getCells()) {
       info.append("\nCell: ").append(cell.getName()).append("\n");
       for (Product product : cell.getProducts()) {
-        info.append("- ").append(product.getName())
-            .append(" (Quantity: ").append(cell.getProductQuantity(product))
-            .append(", Price: ").append(product.getPrice())
+        info.append("- ")
+            .append(product.getName())
+            .append(" (Quantity: ")
+            .append(cell.getProductQuantity(product))
+            .append(", Price: ")
+            .append(product.getPrice())
             .append(")\n");
       }
     }
@@ -386,13 +426,18 @@ public class Company {
 
   public String getSellPointProductsInfo(SellPoint sellPoint) {
     StringBuilder info = new StringBuilder();
-    info.append("Products in Sell Point ").append(sellPoint.getName()).append(":\n");
+    info.append("Products in Sell Point ")
+        .append(sellPoint.getName())
+        .append(":\n");
     for (Cell cell : sellPoint.getCells()) {
       info.append("\nCell: ").append(cell.getName()).append("\n");
       for (Product product : cell.getProducts()) {
-        info.append("- ").append(product.getName())
-            .append(" (Quantity: ").append(cell.getProductQuantity(product))
-            .append(", Price: ").append(product.getPrice())
+        info.append("- ")
+            .append(product.getName())
+            .append(" (Quantity: ")
+            .append(cell.getProductQuantity(product))
+            .append(", Price: ")
+            .append(product.getPrice())
             .append(")\n");
       }
     }
@@ -403,9 +448,12 @@ public class Company {
     StringBuilder info = new StringBuilder();
     info.append("Products Available for Purchase:\n");
     for (Product product : products) {
-      info.append("- ").append(product.getName())
-          .append(" (Type: ").append(product.getType())
-          .append(", Price: ").append(product.getPrice())
+      info.append("- ")
+          .append(product.getName())
+          .append(" (Type: ")
+          .append(product.getType())
+          .append(", Price: ")
+          .append(product.getPrice())
           .append(")\n");
     }
     return info.toString();
