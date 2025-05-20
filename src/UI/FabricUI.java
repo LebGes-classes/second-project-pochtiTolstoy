@@ -2,6 +2,7 @@ package UI;
 
 import Company.Company;
 import Storage.Fabric.Fabric;
+import Util.FabricSelector;
 import Util.ProductType;
 import java.util.ArrayList;
 
@@ -61,28 +62,13 @@ public class FabricUI extends BaseUI {
   }
 
   private void showFabricInfo() {
-    Fabric fabric = selectFabric("Select fabric to view information: ");
+    Fabric fabric = FabricSelector.selectFabric(
+        company, this, "Select fabric to view information: ");
     if (fabric == null) {
       printError("No fabrics available.");
       return;
     }
     printInfo(fabric.toString());
-  }
-
-  private Fabric selectFabric(String prompt) {
-    ArrayList<Fabric> fabrics = company.getAllFabrics();
-    if (fabrics.isEmpty()) {
-      return null;
-    }
-    printInfo(prompt);
-    for (int i = 0; i < fabrics.size(); i++) {
-      printInfo(String.format("%d. %s", i + 1, fabrics.get(i)));
-    }
-    int choice = readIntInput("Enter choice: ") - 1;
-    if (choice < 0 || choice >= fabrics.size()) {
-      return null;
-    }
-    return fabrics.get(choice);
   }
 
   private ProductType selectProductType(String prompt) {
