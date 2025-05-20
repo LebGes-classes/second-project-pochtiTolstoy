@@ -1,9 +1,9 @@
 package Storage.Warehouse;
 
-import Storage.Entity;
-import Storage.Cell.Cell;
-import Person.Employee.Worker.Worker;
 import Person.Employee.Manager.Manager;
+import Person.Employee.Worker.Worker;
+import Storage.Cell.Cell;
+import Storage.Entity;
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -13,11 +13,10 @@ public class Warehouse extends Entity implements Serializable {
   private Manager manager;
   private boolean isActive;
 
-  public Warehouse() {
-    this("none", "none", null, null);
-  }
+  public Warehouse() { this("none", "none", null, null); }
 
-  public Warehouse(String name, String description, Manager manager, Worker worker) {
+  public Warehouse(String name, String description, Manager manager,
+                   Worker worker) {
     super(name, description);
     this.cells = new ArrayList<>();
     this.workers = new ArrayList<>();
@@ -26,30 +25,21 @@ public class Warehouse extends Entity implements Serializable {
     this.isActive = true;
   }
 
-  public ArrayList<Cell> getCells() {
-    return new ArrayList<>(cells);
-  }
+  public ArrayList<Cell> getCells() { return new ArrayList<>(cells); }
 
   public int getTotalProducts() {
-    return cells.stream()
-        .mapToInt(cell -> cell.getProducts().size())
-        .sum();
+    return cells.stream().mapToInt(cell -> cell.getProducts().size()).sum();
   }
 
-  public void addCell(Cell cell) {
-    cells.add(cell);
-  }
+  public void addCell(Cell cell) { cells.add(cell); }
 
-  public void removeCell(Cell cell) {
-    cells.remove(cell);
-  }
+  public void removeCell(Cell cell) { cells.remove(cell); }
 
-  public Manager getManager() {
-    return manager;
-  }
+  public Manager getManager() { return manager; }
 
   public void setManager(Manager manager) {
-    if (manager == null) return;
+    if (manager == null)
+      return;
     if (this.manager != null) {
       this.manager.removeWarehouse();
     }
@@ -57,24 +47,20 @@ public class Warehouse extends Entity implements Serializable {
     manager.assignWarehouse(this);
   }
 
-  public ArrayList<Worker> getWorkers() {
-    return this.workers;
-  }
+  public ArrayList<Worker> getWorkers() { return this.workers; }
 
   public void addWorker(Worker worker) {
-    if (worker == null) return;
-    if (workers.contains(worker)) return;
+    if (worker == null)
+      return;
+    if (workers.contains(worker))
+      return;
     this.workers.add(worker);
     worker.assignWarehouse(this);
   }
 
-  public boolean isActive() {
-    return isActive;
-  }
+  public boolean isActive() { return isActive; }
 
-  public void setActive(boolean active) {
-    isActive = active;
-  }
+  public void setActive(boolean active) { isActive = active; }
 
   public Worker getWorker() {
     return workers.isEmpty() ? null : workers.get(0);
@@ -85,9 +71,8 @@ public class Warehouse extends Entity implements Serializable {
     String managerName = (manager != null) ? manager.getName() : "none";
     String workerName = (getWorker() != null) ? getWorker().getName() : "none";
     return String.format(
-        "Warehouse [ id = %s, name = %s, manager = %s, worker = %s, " +
-        "active = %b, cells = %d ]",
-        getId(), getName(), managerName, workerName, 
-        isActive, cells.size());
+        "Warehouse [ id = %s, name = %s, manager = %s, worker = %s, "
+            + "active = %b, cells = %d ]",
+        getId(), getName(), managerName, workerName, isActive, cells.size());
   }
 }

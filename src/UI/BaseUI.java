@@ -13,7 +13,7 @@ public abstract class BaseUI {
     this.scanner = new Scanner(System.in);
   }
 
-  protected int readIntInput(String prompt) {
+  public int readIntInput(String prompt) {
     System.out.print(prompt);
     while (!scanner.hasNextInt()) {
       System.out.println("Please enter a valid number.");
@@ -25,12 +25,12 @@ public abstract class BaseUI {
     return num;
   }
 
-  protected String readStringInput(String prompt) {
+  public String readStringInput(String prompt) {
     System.out.print(prompt);
     return scanner.nextLine();
   }
 
-  protected double readDoubleInput(String prompt) {
+  public double readDoubleInput(String prompt) {
     while (true) {
       try {
         System.out.print(prompt);
@@ -41,15 +41,15 @@ public abstract class BaseUI {
     }
   }
 
-  protected void printError(String message) {
+  public void printError(String message) {
     System.out.println("Error: " + message);
   }
 
-  protected void printSuccess(String message) {
+  public void printSuccess(String message) {
     System.out.println("Success: " + message);
   }
 
-  protected void printInfo(String message) { System.out.println(message); }
+  public void printInfo(String message) { System.out.println(message); }
 
   protected abstract void showMenu();
   protected abstract boolean processMenu();

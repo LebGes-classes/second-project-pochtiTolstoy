@@ -166,19 +166,9 @@ public class Company {
         .collect(Collectors.toCollection(ArrayList::new));
   }
 
-  public ArrayList<Manager> getInactiveManagers() {
+  public ArrayList<Employee> getInactiveEmployees() {
     return employees.stream()
-        .filter(employee -> employee instanceof Manager)
-        .map(employee -> (Manager)employee)
-        .filter(manager -> !manager.isActive())
-        .collect(Collectors.toCollection(ArrayList::new));
-  }
-
-  public ArrayList<Worker> getInactiveWorkers() {
-    return employees.stream()
-        .filter(employee -> employee instanceof Worker)
-        .map(employee -> (Worker)employee)
-        .filter(worker -> !worker.isActive())
+        .filter(emp -> !emp.isActive())
         .collect(Collectors.toCollection(ArrayList::new));
   }
 
