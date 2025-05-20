@@ -5,6 +5,7 @@ import Person.Employee.Employee;
 import Person.Employee.Manager.Manager;
 import Person.Employee.Worker.Worker;
 import Storage.SellPoint.SellPoint;
+import Util.EmployeeSelector;
 import java.util.ArrayList;
 
 public class SellPointUI extends BaseUI {
@@ -60,8 +61,17 @@ public class SellPointUI extends BaseUI {
   private void createSellPoint() {
     String name = readStringInput("Enter sell point name: ");
     String description = readStringInput("Enter sell point description: ");
-    Manager manager = selectManager("Select manager: ");
-    Worker worker = selectWorker("Select worker: ");
+    Manager manager = EmployeeSelector.selectInactiveEmployee(
+        company, this, "Select manager: ", Manager.class,
+        "No managers available!");
+    if (manager == null)
+      return;
+
+    Worker worker = EmployeeSelector.selectInactiveEmployee(
+        company, this, "Select worker: ", Worker.class,
+        "No workers available!");
+    if (worker == null)
+      return;
 
     company.createSellPoint(name, description, manager, worker);
     printSuccess("Sell point created successfully.");
@@ -106,11 +116,14 @@ public class SellPointUI extends BaseUI {
       printError("No active sell points available.");
       return;
     }
-    Manager newManager = selectInactiveManager("Select new manager: ");
+
+    Manager newManager = EmployeeSelector.selectInactiveEmployee(
+        company, this, "Select new manager: ", Manager.class,
+        "No managers available!");
     if (newManager == null) {
-      printError("No inactive managers available for replacement.");
       return;
     }
+
     if (company.changeSellPointManager(sellPoint, newManager)) {
       printSuccess("Sell point manager changed successfully.");
     } else {
@@ -168,65 +181,5 @@ public class SellPointUI extends BaseUI {
       return null;
     }
     return sellPoints.get(choice);
-  }
-
-  private Manager selectManager(String prompt) {
-    ArrayList<Employee> employees = company.getAllEmployees();
-    ArrayList<Manager> managers = new ArrayList<>();
-    for (Employee employee : employees) {
-      if (employee instanceof Manager) {
-        managers.add((Manager)employee);
-      }
-    }
-    if (managers.isEmpty()) {
-      return null;
-    }
-    printInfo(prompt);
-    for (int i = 0; i < managers.size(); i++) {
-      printInfo(String.format("%d. %s", i + 1, managers.get(i)));
-    }
-    int choice = readIntInput("Enter choice: ") - 1;
-    if (choice < 0 || choice >= managers.size()) {
-      return null;
-    }
-    return managers.get(choice);
-  }
-
-  private Manager selectInactiveManager(String prompt) {
-    ArrayList<Manager> managers = company.getInactiveManagers();
-    if (managers.isEmpty()) {
-      return null;
-    }
-    printInfo(prompt);
-    for (int i = 0; i < managers.size(); i++) {
-      printInfo(String.format("%d. %s", i + 1, managers.get(i)));
-    }
-    int choice = readIntInput("Enter choice: ") - 1;
-    if (choice < 0 || choice >= managers.size()) {
-      return null;
-    }
-    return managers.get(choice);
-  }
-
-  private Worker selectWorker(String prompt) {
-    ArrayList<Employee> employees = company.getAllEmployees();
-    ArrayList<Worker> workers = new ArrayList<>();
-    for (Employee employee : employees) {
-      if (employee instanceof Worker) {
-        workers.add((Worker)employee);
-      }
-    }
-    if (workers.isEmpty()) {
-      return null;
-    }
-    printInfo(prompt);
-    for (int i = 0; i < workers.size(); i++) {
-      printInfo(String.format("%d. %s", i + 1, workers.get(i)));
-    }
-    int choice = readIntInput("Enter choice: ") - 1;
-    if (choice < 0 || choice >= workers.size()) {
-      return null;
-    }
-    return workers.get(choice);
   }
 }

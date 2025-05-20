@@ -71,18 +71,6 @@ public class WarehouseUI extends BaseUI {
     String name = readStringInput("Enter warehouse name: ");
     String description = readStringInput("Enter warehouse description: ");
 
-    // Manager manager = selectInactiveManager("Select manager: ");
-    // if (manager == null) {
-    //   printError("no managers available!");
-    //   return;
-    // }
-    //
-    // Worker worker = selectInactiveWorker("Select worker: ");
-    // if (worker == null) {
-    //   printError("no workers available!");
-    //   return;
-    // }
-
     Manager manager = EmployeeSelector.selectEmployee(
         company, this, "Select manager: ", Manager.class,
         "No managers available!");
