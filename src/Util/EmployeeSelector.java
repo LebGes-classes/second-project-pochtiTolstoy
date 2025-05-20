@@ -34,6 +34,17 @@ public final class EmployeeSelector {
     return selectFromList(ui, employees, prompt, noEmployeesMessage);
   }
 
+  public static <T extends Employee>
+      T selectActiveEmployee(Company company, BaseUI ui, String prompt,
+                             Class<T> employeeType, String noEmployeesMessage) {
+    List<T> employees = company.getActiveEmployees()
+                            .stream()
+                            .filter(employeeType::isInstance)
+                            .map(employeeType::cast)
+                            .collect(Collectors.toList());
+    return selectFromList(ui, employees, prompt, noEmployeesMessage);
+  }
+
   private static <T extends Employee> T selectFromList(BaseUI ui,
                                                        List<T> employees,
                                                        String prompt,

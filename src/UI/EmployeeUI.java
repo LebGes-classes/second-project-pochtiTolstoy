@@ -4,6 +4,7 @@ import Company.Company;
 import Person.Employee.Employee;
 import Person.Employee.Manager.Manager;
 import Person.Employee.Worker.Worker;
+import Util.EmployeeSelector;
 import java.util.ArrayList;
 
 public class EmployeeUI extends BaseUI {
@@ -103,70 +104,32 @@ public class EmployeeUI extends BaseUI {
   }
 
   private void listInactiveEmployees() {
-    ArrayList<Employee> employees = company.getAllEmployees();
-    ArrayList<Employee> inactiveEmployees = new ArrayList<>();
-    for (Employee employee : employees) {
-      if (!employee.isActive()) {
-        inactiveEmployees.add(employee);
-      }
-    }
-    if (inactiveEmployees.isEmpty()) {
+    ArrayList<Employee> employees = company.getInactiveEmployees();
+    if (employees.isEmpty()) {
       printInfo("No inactive employees.");
       return;
     }
-    for (Employee employee : inactiveEmployees) {
+    for (Employee employee : employees) {
       printInfo(employee.toString());
     }
   }
 
   private void fireEmployee() {
-    Employee employee = selectActiveEmployee("Select employee to fire: ");
-    if (employee == null) {
-      printError("No active employees available.");
+    Employee employee = EmployeeSelector.selectActiveEmployee(
+        company, this, "Select employee to fire: ", Employee.class,
+        "No employees available!");
+    if (employee == null)
       return;
-    }
     company.fireEmployee(employee);
     printSuccess("Employee fired successfully.");
   }
 
   private void showEmployeeInfo() {
-    Employee employee = selectEmployee("Select employee to view information: ");
-    if (employee == null) {
-      printError("No employees available.");
+    Employee employee = EmployeeSelector.selectEmployee(
+        company, this, "Select employee to show info: ", Employee.class,
+        "No employees available!");
+    if (employee == null)
       return;
-    }
     printInfo(employee.toString());
-  }
-
-  private Employee selectEmployee(String prompt) {
-    ArrayList<Employee> employees = company.getAllEmployees();
-    if (employees.isEmpty()) {
-      return null;
-    }
-    printInfo(prompt);
-    for (int i = 0; i < employees.size(); i++) {
-      printInfo(String.format("%d. %s", i + 1, employees.get(i)));
-    }
-    int choice = readIntInput("Enter choice: ") - 1;
-    if (choice < 0 || choice >= employees.size()) {
-      return null;
-    }
-    return employees.get(choice);
-  }
-
-  private Employee selectActiveEmployee(String prompt) {
-    ArrayList<Employee> employees = company.getActiveEmployees();
-    if (employees.isEmpty()) {
-      return null;
-    }
-    printInfo(prompt);
-    for (int i = 0; i < employees.size(); i++) {
-      printInfo(String.format("%d. %s", i + 1, employees.get(i)));
-    }
-    int choice = readIntInput("Enter choice: ") - 1;
-    if (choice < 0 || choice >= employees.size()) {
-      return null;
-    }
-    return employees.get(choice);
   }
 }
