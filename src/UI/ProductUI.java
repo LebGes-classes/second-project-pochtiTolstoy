@@ -2,6 +2,7 @@ package UI;
 
 import Company.Company;
 import Product.Product;
+import Util.ProductSelector;
 import Util.ProductType;
 import java.util.ArrayList;
 
@@ -62,31 +63,17 @@ public class ProductUI extends BaseUI {
   }
 
   private void purchaseProduct() {
-    Product product = selectProduct("Choose available product to purchase:");
+    Product product = ProductSelector.selectProduct(
+        company, this, "Choose available product to purchase:");
     if (product == null) {
       printError("No products available.");
       return;
     }
+
     int quantity = readIntInput("Enter quantity: ");
 
     // TODO: Implement purchase logic
     printInfo("Purchase functionality not implemented yet.");
-  }
-
-  private Product selectProduct(String prompt) {
-    ArrayList<Product> products = company.getAvailableProducts();
-    if (products.isEmpty()) {
-      return null;
-    }
-    printInfo(prompt);
-    for (int i = 0; i < products.size(); i++) {
-      printInfo(String.format("%d. %s", i + 1, products.get(i)));
-    }
-    int choice = readIntInput("Enter choice: ") - 1;
-    if (choice < 0 || choice >= products.size()) {
-      return null;
-    }
-    return products.get(choice);
   }
 
   private ProductType selectProductType(String prompt) {

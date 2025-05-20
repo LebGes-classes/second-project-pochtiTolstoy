@@ -8,7 +8,8 @@ public class Product extends Entity {
   private int quantity;
   private ProductType type;
 
-  public Product(String name, String description, double price, int quantity, ProductType type) {
+  public Product(String name, String description, double price, int quantity,
+                 ProductType type) {
     super(name, description);
     this.price = price;
     this.quantity = quantity;
@@ -16,35 +17,24 @@ public class Product extends Entity {
   }
 
   public Product(Product product) {
-    this(product.getName(), 
-        product.getDescription(), 
-        product.getPrice(),
-        product.getQuantity(),
-        product.getType());
+    this(product.getName(), product.getDescription(), product.getPrice(),
+         product.getQuantity(), product.getType());
   }
 
-  public double getPrice() {
-    return price;
-  }
+  public double getPrice() { return price; }
 
-  public void setPrice(double price) {
-    this.price = price;
-  }
+  public void setPrice(double price) { this.price = price; }
 
-  public int getQuantity() {
-    return quantity;
-  }
+  public int getQuantity() { return quantity; }
 
-  public void setQuantity(int quantity) {
-    this.quantity = quantity;
-  }
+  public void setQuantity(int quantity) { this.quantity = quantity; }
 
   public ProductType getType() { return type; }
 
   @Override
   public String toString() {
-    return String.format("Product{name='%s', price=%.2f, quantity=%d, type='%s'}", 
-      getName(), price, quantity, type.toString());
+    return String.format(
+        "Product{name='%s', price=%.2f, quantity=%d, type='%s'}", getName(),
+        price, quantity, type.toString());
   }
 }
-
