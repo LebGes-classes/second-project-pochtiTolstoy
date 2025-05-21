@@ -7,6 +7,7 @@ import Person.Employee.Worker.Worker;
 import Storage.Cell.Cell;
 import Storage.Warehouse.Warehouse;
 import Util.EmployeeSelector;
+import Util.WarehouseSelector;
 import java.util.ArrayList;
 
 public class WarehouseUI extends BaseUI {
@@ -88,7 +89,8 @@ public class WarehouseUI extends BaseUI {
   }
 
   private void closeWarehouse() {
-    Warehouse warehouse = selectActiveWarehouse("Select warehouse to close: ");
+    Warehouse warehouse = WarehouseSelector.selectActiveWarehouse(
+        company, this, "Select warehouse to close: ");
     if (warehouse == null) {
       printError("No active warehouses available.");
       return;
@@ -98,7 +100,8 @@ public class WarehouseUI extends BaseUI {
   }
 
   private void reopenWarehouse() {
-    Warehouse warehouse = selectWarehouse("Select warehouse to reopen: ");
+    Warehouse warehouse = WarehouseSelector.selectWarehouse(
+        company, this, "Select warehouse to reopen: ");
     if (warehouse == null) {
       printError("No warehouses available.");
       return;
@@ -145,7 +148,8 @@ public class WarehouseUI extends BaseUI {
   }
 
   private void createCell() {
-    Warehouse warehouse = selectActiveWarehouse("Select warehouse: ");
+    Warehouse warehouse = WarehouseSelector.selectActiveWarehouse(
+        company, this, "Select warehouse: ");
     if (warehouse == null) {
       printError("No active warehouses available.");
       return;
@@ -159,8 +163,8 @@ public class WarehouseUI extends BaseUI {
   }
 
   private void changeWarehouseManager() {
-    Warehouse warehouse =
-        selectActiveWarehouse("Select warehouse to change manager: ");
+    Warehouse warehouse = WarehouseSelector.selectActiveWarehouse(
+        company, this, "Select warehouse to change manager: ");
     if (warehouse == null) {
       printError("No active warehouses available.");
       return;
@@ -181,8 +185,8 @@ public class WarehouseUI extends BaseUI {
   }
 
   private void showWarehouseInfo() {
-    Warehouse warehouse =
-        selectWarehouse("Select warehouse to view information: ");
+    Warehouse warehouse = WarehouseSelector.selectWarehouse(
+        company, this, "Select warehouse to view information: ");
     if (warehouse == null) {
       printError("No warehouses available.");
       return;
@@ -191,44 +195,12 @@ public class WarehouseUI extends BaseUI {
   }
 
   private void showWarehouseProductsInfo() {
-    Warehouse warehouse =
-        selectWarehouse("Select warehouse to view products: ");
+    Warehouse warehouse = WarehouseSelector.selectWarehouse(
+        company, this, "Select warehouse to view products: ");
     if (warehouse == null) {
       printError("No warehouses available.");
       return;
     }
     printInfo(company.getWarehouseProductsInfo(warehouse));
-  }
-
-  private Warehouse selectWarehouse(String prompt) {
-    ArrayList<Warehouse> warehouses = company.getAllWarehouses();
-    if (warehouses.isEmpty()) {
-      return null;
-    }
-    printInfo(prompt);
-    for (int i = 0; i < warehouses.size(); i++) {
-      printInfo(String.format("%d. %s", i + 1, warehouses.get(i)));
-    }
-    int choice = readIntInput("Enter choice: ") - 1;
-    if (choice < 0 || choice >= warehouses.size()) {
-      return null;
-    }
-    return warehouses.get(choice);
-  }
-
-  private Warehouse selectActiveWarehouse(String prompt) {
-    ArrayList<Warehouse> warehouses = company.getActiveWarehouses();
-    if (warehouses.isEmpty()) {
-      return null;
-    }
-    printInfo(prompt);
-    for (int i = 0; i < warehouses.size(); i++) {
-      printInfo(String.format("%d. %s", i + 1, warehouses.get(i)));
-    }
-    int choice = readIntInput("Enter choice: ") - 1;
-    if (choice < 0 || choice >= warehouses.size()) {
-      return null;
-    }
-    return warehouses.get(choice);
   }
 }

@@ -1,9 +1,12 @@
 package UI;
 
 import Company.Company;
+import Order.CompanyOrder.CompanyOrder;
 import Product.Product;
-import Util.ProductSelector;
-import Util.ProductType;
+import Storage.Cell.Cell;
+import Storage.Fabric.Fabric;
+import Storage.Warehouse.Warehouse;
+import Util.*;
 import java.util.ArrayList;
 
 public class ProductUI extends BaseUI {
@@ -63,17 +66,59 @@ public class ProductUI extends BaseUI {
   }
 
   private void purchaseProduct() {
-    Product product = ProductSelector.selectProduct(
-        company, this, "Choose available product to purchase:");
-    if (product == null) {
-      printError("No products available.");
+    CompanyOrder order = CompanyOrder.createCompanyOrder(company, this);
+    if (order == null) {
       return;
     }
 
-    int quantity = readIntInput("Enter quantity: ");
+    Fabric fabric = FabricSelector.getAvailableFabric(company, order);
+    if (fabric == null) {
+      return;
+    }
 
-    // TODO: Implement purchase logic
-    printInfo("Purchase functionality not implemented yet.");
+    fabric.acceptOrder(order);
+    while (!fabric.isProductReady())
+      ;
+    Product product = fabric.getProduct(order);
+
+    printInfo("Select avtive warehouse for stoarge: ");
+    Warehouse warehouse = WarehouseSelector.selectActiveWarehouse(
+        company, this, "Select active warehouse: ");
+    if (warehouse == null) {
+      System.out.println("No warehouses available!");
+      return;
+    }
+
+    ArrayList<Cell> cells = warehouse.getCells();
+    int quantity = product.getQuantity();
+    int availableCells = 0;
+    System.out.println("Choose cell:");
+    for (int i = 0; i < cells.size(); ++i) {
+      if (cells.get(i).getAvailableCapacity() >= quantity) {
+        System.out.println(++availableCells + ". " + cells.get(i).toString());
+      }
+    }
+
+    int choice = readIntInput("Enter choice: ") - 1;
+    if (choice < 0 || choice >= availableCells) {
+      System.out.println("Invalid cell selection");
+      return;
+    }
+
+    cells.get(choice).addProduct(product);
+    System.out.println("Product purchase is successful.");
+
+    // Product product = ProductSelector.selectProduct(
+    //     company, this, "Choose available product to purchase:");
+    // if (product == null) {
+    //   printError("No products available.");
+    //   return;
+    // }
+    //
+    // int quantity = readIntInput("Enter quantity: ");
+    //
+    // // TODO: Implement purchase logic
+    // printInfo("Purchase functionality not implemented yet.");
   }
 
   private ProductType selectProductType(String prompt) {

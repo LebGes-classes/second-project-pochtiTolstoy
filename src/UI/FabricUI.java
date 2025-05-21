@@ -62,10 +62,9 @@ public class FabricUI extends BaseUI {
   }
 
   private void showFabricInfo() {
-    Fabric fabric = FabricSelector.selectFabric(
-        company, this, "Select fabric to view information: ");
+    Fabric fabric = FabricSelector.selectFabric(company, this);
     if (fabric == null) {
-      printError("No fabrics available.");
+      printError("No fabrics available!");
       return;
     }
     printInfo(fabric.toString());

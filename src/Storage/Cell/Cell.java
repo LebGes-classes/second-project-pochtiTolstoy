@@ -1,8 +1,8 @@
 package Storage.Cell;
 
-import java.util.ArrayList;
-import Storage.Entity;
 import Product.Product;
+import Storage.Entity;
+import java.util.ArrayList;
 
 public class Cell extends Entity {
   private int capacity;
@@ -14,33 +14,29 @@ public class Cell extends Entity {
     this.products = new ArrayList<>();
   }
 
-  public int getCapacity() {
-    return capacity;
-  }
+  public int getCapacity() { return capacity; }
 
   public int getAvailableCapacity() {
-    int usedCapacity = products.stream()
-      .mapToInt(Product::getQuantity)
-      .sum();
+    int usedCapacity = products.stream().mapToInt(Product::getQuantity).sum();
     return capacity - usedCapacity;
   }
 
-  public ArrayList<Product> getProducts() {
-    return new ArrayList<>(products);
-  }
+  public ArrayList<Product> getProducts() { return new ArrayList<>(products); }
 
   public boolean hasProduct(Product product) {
-    return products.stream()
-      .anyMatch(p -> p.getName().equals(product.getName()) && 
-                   p.getType() == product.getType());
+    return products.stream().anyMatch(
+        p
+        -> p.getName().equals(product.getName()) &&
+               p.getType() == product.getType());
   }
 
   public int getProductQuantity(Product product) {
     return products.stream()
-      .filter(p -> p.getName().equals(product.getName()) && 
-                  p.getType() == product.getType())
-      .mapToInt(Product::getQuantity)
-      .sum();
+        .filter(p
+                -> p.getName().equals(product.getName()) &&
+                       p.getType() == product.getType())
+        .mapToInt(Product::getQuantity)
+        .sum();
   }
 
   public void addProduct(Product product) {
@@ -59,16 +55,14 @@ public class Cell extends Entity {
     products.add(newProduct);
   }
 
-  public void removeProduct(Product product) {
-    products.remove(product);
-  }
+  public void removeProduct(Product product) { products.remove(product); }
 
   public void removeProduct(Product product, int quantity) {
     int remainingQuantity = quantity;
     ArrayList<Product> toRemove = new ArrayList<>();
-    
+
     for (Product p : products) {
-      if (p.getName().equals(product.getName()) && 
+      if (p.getName().equals(product.getName()) &&
           p.getType() == product.getType()) {
         if (p.getQuantity() <= remainingQuantity) {
           remainingQuantity -= p.getQuantity();
@@ -79,13 +73,14 @@ public class Cell extends Entity {
         }
       }
     }
-    
+
     products.removeAll(toRemove);
   }
 
   @Override
   public String toString() {
     return String.format("Cell{id=%s, name='%s', capacity=%d/%d, products=%d}",
-      getId(), getName(), getAvailableCapacity(), capacity, products.size());
+                         getId(), getName(), getAvailableCapacity(), capacity,
+                         products.size());
   }
 }
