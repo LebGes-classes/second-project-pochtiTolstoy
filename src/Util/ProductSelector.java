@@ -10,7 +10,7 @@ public final class ProductSelector {
 
   public static Product selectProduct(Company company, BaseUI ui,
                                       String prompt) {
-    ArrayList<Product> products = company.getAvailableProducts();
+    ArrayList<Product> products = company.getAvailableProductsToPurchase();
     if (products.isEmpty()) {
       return null;
     }

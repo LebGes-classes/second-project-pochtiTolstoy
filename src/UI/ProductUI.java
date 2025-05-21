@@ -30,7 +30,7 @@ public class ProductUI extends BaseUI {
       createProduct();
       break;
     case 2:
-      listAvailableProducts();
+      listAvailableProductsToPurchase();
       break;
     case 3:
       purchaseProduct();
@@ -53,8 +53,8 @@ public class ProductUI extends BaseUI {
     printSuccess("Product created successfully.");
   }
 
-  private void listAvailableProducts() {
-    ArrayList<Product> products = company.getAvailableProducts();
+  private void listAvailableProductsToPurchase() {
+    ArrayList<Product> products = company.getAvailableProductsToPurchase();
     if (products.isEmpty()) {
       printInfo("No products available.");
       return;
@@ -107,18 +107,6 @@ public class ProductUI extends BaseUI {
 
     cells.get(choice).addProduct(product);
     System.out.println("Product purchase is successful.");
-
-    // Product product = ProductSelector.selectProduct(
-    //     company, this, "Choose available product to purchase:");
-    // if (product == null) {
-    //   printError("No products available.");
-    //   return;
-    // }
-    //
-    // int quantity = readIntInput("Enter quantity: ");
-    //
-    // // TODO: Implement purchase logic
-    // printInfo("Purchase functionality not implemented yet.");
   }
 
   private ProductType selectProductType(String prompt) {

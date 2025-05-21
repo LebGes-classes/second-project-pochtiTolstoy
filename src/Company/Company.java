@@ -20,7 +20,7 @@ public class Company {
   private ArrayList<SellPoint> sellPoints;
   private ArrayList<Employee> employees;
   private ArrayList<Customer> customers;
-  private ArrayList<Product> products;
+  private ArrayList<Product> productsToPurchase;
   private ArrayList<Fabric> fabrics;
 
   public Company(DataLoader dataLoader) {
@@ -29,7 +29,7 @@ public class Company {
     sellPoints = dataLoader.loadSellPoints();
     employees = dataLoader.loadEmployees();
     customers = dataLoader.loadCustomers();
-    products = dataLoader.loadProducts();
+    productsToPurchase = dataLoader.loadProductsToPurchase();
     fabrics = dataLoader.loadFabrics();
   }
 
@@ -57,7 +57,7 @@ public class Company {
   public void createProduct(String name, String description, double price,
                             int quantity, ProductType type) {
     Product product = new Product(name, description, price, quantity, type);
-    products.add(product);
+    productsToPurchase.add(product);
     saveData();
   }
 
@@ -101,8 +101,8 @@ public class Company {
     return new ArrayList<>(sellPoints);
   }
 
-  public ArrayList<Product> getAvailableProducts() {
-    return new ArrayList<>(products);
+  public ArrayList<Product> getAvailableProductsToPurchase() {
+    return new ArrayList<>(productsToPurchase);
   }
 
   public void hireManager(String name, String description, String contactInfo,
@@ -434,10 +434,10 @@ public class Company {
     return info.toString();
   }
 
-  public String getAvailableProductsForPurchase() {
+  public String getAvailableProductsFormatted() {
     StringBuilder info = new StringBuilder();
     info.append("Products Available for Purchase:\n");
-    for (Product product : products) {
+    for (Product product : productsToPurchase) {
       info.append("- ")
           .append(product.getName())
           .append(" (Type: ")
@@ -454,7 +454,7 @@ public class Company {
     dataLoader.saveSellPoints(sellPoints);
     dataLoader.saveEmployees(employees);
     dataLoader.saveCustomers(customers);
-    dataLoader.saveProducts(products);
+    dataLoader.saveProductsToPurchase(productsToPurchase);
     dataLoader.saveFabrics(fabrics);
   }
 }
