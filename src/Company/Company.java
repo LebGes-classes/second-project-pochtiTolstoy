@@ -6,6 +6,7 @@ import Person.Employee.Employee;
 import Person.Employee.Manager.Manager;
 import Person.Employee.Worker.Worker;
 import Product.Product;
+import Product.ProductSpecification;
 import Storage.Cell.Cell;
 import Storage.Fabric.Fabric;
 import Storage.SellPoint.SellPoint;
@@ -20,7 +21,7 @@ public class Company {
   private ArrayList<SellPoint> sellPoints;
   private ArrayList<Employee> employees;
   private ArrayList<Customer> customers;
-  private ArrayList<Product> productsToPurchase;
+  private ArrayList<ProductSpecification> productsToPurchase;
   private ArrayList<Fabric> fabrics;
 
   public Company(DataLoader dataLoader) {
@@ -54,9 +55,11 @@ public class Company {
     saveData();
   }
 
-  public void createProduct(String name, String description, double price,
-                            int quantity, ProductType type) {
-    Product product = new Product(name, description, price, quantity, type);
+  public void createProductSpecification(String name, String description,
+                                         double price, int quantity,
+                                         ProductType type) {
+    ProductSpecification product =
+        new ProductSpecification(name, description, price, type);
     productsToPurchase.add(product);
     saveData();
   }
@@ -101,7 +104,7 @@ public class Company {
     return new ArrayList<>(sellPoints);
   }
 
-  public ArrayList<Product> getAvailableProductsToPurchase() {
+  public ArrayList<ProductSpecification> getAvailableProductsToPurchase() {
     return new ArrayList<>(productsToPurchase);
   }
 
@@ -223,18 +226,15 @@ public class Company {
       return false;
     }
 
-    // Verify source cell has enough products
     if (!sourceCell.hasProduct(product) ||
         sourceCell.getProductQuantity(product) < quantity) {
       return false;
     }
 
-    // Verify target cell has enough capacity
     if (targetCell.getAvailableCapacity() < quantity) {
       return false;
     }
 
-    // Move the product
     sourceCell.removeProduct(product, quantity);
     targetCell.addProduct(product, quantity);
     saveData();
@@ -437,7 +437,7 @@ public class Company {
   public String getAvailableProductsFormatted() {
     StringBuilder info = new StringBuilder();
     info.append("Products Available for Purchase:\n");
-    for (Product product : productsToPurchase) {
+    for (ProductSpecification product : productsToPurchase) {
       info.append("- ")
           .append(product.getName())
           .append(" (Type: ")

@@ -3,30 +3,31 @@ package Order.CompanyOrder;
 import Company.Company;
 import Order.Order;
 import Product.Product;
+import Product.ProductSpecification;
 import UI.BaseUI;
 import Util.ProductSelector;
 
 public class CompanyOrder extends Order {
-  Product product;
-  int quantity;
-  private CompanyOrder(Product product, int quantity) {
-    this.product = product;
+  private ProductSpecification spec;
+  private int quantity;
+  private CompanyOrder(ProductSpecification spec, int quantity) {
+    this.spec = spec;
     this.quantity = quantity;
   }
 
   public static CompanyOrder createCompanyOrder(Company company, BaseUI ui) {
-    Product product = ProductSelector.selectProduct(
+    ProductSpecification spec = ProductSelector.selectProductSpecification(
         company, ui, "Choose available product to purchase:");
-    if (product == null) {
+    if (spec == null) {
       ui.printError("No products available!");
       return null;
     }
     int quantity = ui.readIntInput("Enter quantity: ");
-    CompanyOrder order = new CompanyOrder(product, quantity);
+    CompanyOrder order = new CompanyOrder(spec, quantity);
     return order;
   }
 
-  public Product getProduct() { return product; }
+  public ProductSpecification getProductSpecification() { return spec; }
 
   public int getQuantity() { return quantity; }
 }

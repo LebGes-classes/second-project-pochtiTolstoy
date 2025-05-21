@@ -15,7 +15,7 @@ public class ProductUI extends BaseUI {
   @Override
   public void showMenu() {
     System.out.println("------Products------");
-    System.out.println("1. Create Product");
+    System.out.println("1. Create Product Specification");
     System.out.println("2. List Available Products");
     System.out.println("3. Purchase Product");
     System.out.println("0. Exit");
@@ -27,7 +27,7 @@ public class ProductUI extends BaseUI {
     int choice = readIntInput("Enter your choice: ");
     switch (choice) {
     case 1:
-      createProduct();
+      createProductSpecification();
       break;
     case 2:
       listAvailableProductsToPurchase();
@@ -43,13 +43,13 @@ public class ProductUI extends BaseUI {
     return true;
   }
 
-  private void createProduct() {
+  private void createProductSpecification() {
     String name = readStringInput("Enter product name: ");
     String description = readStringInput("Enter product description: ");
     double price = readDoubleInput("Enter product price: ");
     ProductType type = selectProductType("Select product type:");
 
-    company.createProduct(name, description, price, 0, type);
+    company.createProductSpecification(name, description, price, 0, type);
     printSuccess("Product created successfully.");
   }
 

@@ -21,6 +21,11 @@ public class Product extends Entity {
          product.getQuantity(), product.getType());
   }
 
+  public Product(ProductSpecification spec, int quantity) {
+    this(spec.getName(), spec.getDescription(), spec.getPrice(), quantity,
+         spec.getType());
+  }
+
   public double getPrice() { return price; }
 
   public void setPrice(double price) { this.price = price; }

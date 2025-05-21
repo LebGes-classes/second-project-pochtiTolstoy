@@ -26,7 +26,7 @@ public final class FabricSelector {
   }
 
   public static Fabric getAvailableFabric(Company company, CompanyOrder order) {
-    ProductType targetType = order.getProduct().getType();
+    ProductType targetType = order.getProductSpecification().getType();
     ArrayList<Fabric> fabrics = company.getAllFabrics();
 
     for (Fabric fabric : fabrics) {

@@ -2,15 +2,17 @@ package Util;
 
 import Company.Company;
 import Product.Product;
+import Product.ProductSpecification;
 import UI.BaseUI;
 import java.util.ArrayList;
 
 public final class ProductSelector {
   private ProductSelector() {}
 
-  public static Product selectProduct(Company company, BaseUI ui,
-                                      String prompt) {
-    ArrayList<Product> products = company.getAvailableProductsToPurchase();
+  public static ProductSpecification
+  selectProductSpecification(Company company, BaseUI ui, String prompt) {
+    ArrayList<ProductSpecification> products =
+        company.getAvailableProductsToPurchase();
     if (products.isEmpty()) {
       return null;
     }

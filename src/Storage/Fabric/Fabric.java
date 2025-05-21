@@ -1,19 +1,20 @@
 package Storage.Fabric;
 
-import java.lang.IllegalArgumentException;
-
-import Util.ProductType;
-import Storage.Entity;
-import Product.Product;
 import Order.CompanyOrder.CompanyOrder;
+import Product.Product;
+import Product.ProductSpecification;
+import Storage.Entity;
+import Util.ProductType;
+import java.lang.IllegalArgumentException;
 
 public class Fabric extends Entity {
   private final ProductType productType;
   private final int timeToProduce;
   private Product product;
   private boolean productReady;
-  
-  public Fabric(String name, String description, ProductType type, int timeToProduce) {
+
+  public Fabric(String name, String description, ProductType type,
+                int timeToProduce) {
     super(name, description);
     this.productType = type;
     this.timeToProduce = timeToProduce;
@@ -26,14 +27,17 @@ public class Fabric extends Entity {
       throw new IllegalArgumentException("Product type in inavlid state.");
     }
     if (timeToProduce <= 0) {
-      throw new IllegalArgumentException("Time to product should be greater than 0.");
+      throw new IllegalArgumentException(
+          "Time to product should be greater than 0.");
     }
   }
 
   public void acceptOrder(CompanyOrder order) {
-    this.product = order.getProduct();    
+    ProductSpecification spec = order.getProductSpecification();
     int quantity = order.getQuantity();
-    if (quantity <= 0) return;
+    this.product = new Product(spec, 0);
+    if (quantity <= 0)
+      return;
     System.out.println("Creating products...");
     for (int i = 0; i < quantity; ++i) {
       createProduct();
