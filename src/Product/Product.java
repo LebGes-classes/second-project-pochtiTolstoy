@@ -36,6 +36,11 @@ public class Product extends Entity {
 
   public ProductType getType() { return type; }
 
+  public boolean isSameProduct(Product other) {
+    return getName().equals(other.getName()) &&
+        getType().equals(other.getType());
+  }
+
   @Override
   public String toString() {
     return String.format(

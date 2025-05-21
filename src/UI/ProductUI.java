@@ -35,6 +35,13 @@ public class ProductUI extends BaseUI {
     case 3:
       purchaseProduct();
       break;
+    case 4:
+      // TODO : move product to sell point
+      moveProductToSellPoint();
+      break;
+    case 5:
+      // TODO : move product to Warehouse
+      break;
     case 0:
       return false;
     default:
@@ -99,6 +106,14 @@ public class ProductUI extends BaseUI {
 
     cells.get(choice).addProduct(product);
     System.out.println("Product purchase is successful.");
+  }
+
+  private void moveProductToSellPoint() {
+    // 1. print list of products inside active warehouse from cell
+    // 2. choose product to move
+    // 3. choose available sell point
+    // 4. delete product from cell
+    // 5. move product to sell point
   }
 
   private ProductType selectProductType(String prompt) {
