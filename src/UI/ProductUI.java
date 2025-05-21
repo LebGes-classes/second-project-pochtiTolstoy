@@ -54,15 +54,7 @@ public class ProductUI extends BaseUI {
   }
 
   private void listAvailableProductsToPurchase() {
-    ArrayList<Product> products = company.getAvailableProductsToPurchase();
-    if (products.isEmpty()) {
-      printInfo("No products available.");
-      return;
-    }
-    printInfo("Available products:");
-    for (Product product : products) {
-      printInfo(product.toString());
-    }
+    printInfo(company.getAvailableProductsFormatted());
   }
 
   private void purchaseProduct() {
