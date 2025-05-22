@@ -196,23 +196,10 @@ public class Company {
     if (sourceCell == null) {
       return false;
     }
-
-    Cell targetCell = null;
-    for (Cell cell : sellPoint.getCells()) {
-      if (cell.getAvailableCapacity() >= quantity) {
-        targetCell = cell;
-        break;
-      }
-    }
-
-    if (targetCell == null) {
-      targetCell = new Cell("Cell-" + sellPoint.getCells().size(),
-                            "Auto-created cell", quantity);
-      sellPoint.addCell(targetCell);
-    }
-
+    Product moveProduct = new Product(product);
+    moveProduct.setQuantity(quantity);
+    sellPoint.addProduct(moveProduct);
     sourceCell.removeProduct(product, quantity);
-    targetCell.addProduct(product, quantity);
     saveData();
     return true;
   }
@@ -376,9 +363,6 @@ public class Company {
         .append(sellPoint.isActive() ? "Active" : "Inactive")
         .append("\n");
     info.append("Manager: ").append(sellPoint.getManager()).append("\n");
-    info.append("Total Cells: ")
-        .append(sellPoint.getCells().size())
-        .append("\n");
     info.append("Total Products: ")
         .append(sellPoint.getTotalProducts())
         .append("\n");
@@ -419,17 +403,14 @@ public class Company {
     info.append("Products in Sell Point ")
         .append(sellPoint.getName())
         .append(":\n");
-    for (Cell cell : sellPoint.getCells()) {
-      info.append("\nCell: ").append(cell.getName()).append("\n");
-      for (Product product : cell.getProducts()) {
-        info.append("- ")
-            .append(product.getName())
-            .append(" (Quantity: ")
-            .append(cell.getProductQuantity(product))
-            .append(", Price: ")
-            .append(product.getPrice())
-            .append(")\n");
-      }
+    for (Product product : sellPoint.getProducts()) {
+      info.append("- ")
+          .append(product.getName())
+          .append(" (Quantity: ")
+          .append(sellPoint.getProductQuantity(product))
+          .append(", Price: ")
+          .append(product.getPrice())
+          .append(")\n");
     }
     return info.toString();
   }

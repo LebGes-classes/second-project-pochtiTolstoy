@@ -16,9 +16,9 @@ public final class WarehouseSelector {
       return null;
     }
 
-    System.out.println(prompt);
+    ui.printInfo(prompt);
     for (int i = 0; i < warehouses.size(); i++) {
-      System.out.println((i + 1) + ". " + warehouses.get(i));
+      ui.printInfo((i + 1) + ". " + warehouses.get(i));
     }
 
     int choice = ui.readIntInput("Enter warehouse number: ") - 1;

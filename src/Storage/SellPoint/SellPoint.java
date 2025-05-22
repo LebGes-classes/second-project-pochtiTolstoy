@@ -105,6 +105,25 @@ public class SellPoint extends Entity {
     return true;
   }
 
+  public void addProduct(Product product) {
+    for (Product p : products) {
+      if (p.isSameProduct(product)) {
+        p.setQuantity(p.getQuantity() + product.getQuantity());
+        return;
+      }
+    }
+    products.add(product);
+  }
+
+  public int getProductQuantity(Product product) {
+    return products.stream()
+        .filter(p
+                -> p.getName().equals(product.getName()) &&
+                       p.getType() == product.getType())
+        .mapToInt(Product::getQuantity)
+        .sum();
+  }
+
   @Override
   public String toString() {
     return String.format(

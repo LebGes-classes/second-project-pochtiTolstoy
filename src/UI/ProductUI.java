@@ -5,6 +5,7 @@ import Order.CompanyOrder.CompanyOrder;
 import Product.Product;
 import Storage.Cell.Cell;
 import Storage.Fabric.Fabric;
+import Storage.SellPoint.SellPoint;
 import Storage.Warehouse.Warehouse;
 import Util.*;
 import java.util.ArrayList;
@@ -18,6 +19,7 @@ public class ProductUI extends BaseUI {
     System.out.println("1. Create Product Specification");
     System.out.println("2. List Available Products");
     System.out.println("3. Purchase Product");
+    System.out.println("4. Move product to sell point");
     System.out.println("0. Exit");
   }
 
@@ -36,7 +38,6 @@ public class ProductUI extends BaseUI {
       purchaseProduct();
       break;
     case 4:
-      // TODO : move product to sell point
       moveProductToSellPoint();
       break;
     case 5:
@@ -109,11 +110,34 @@ public class ProductUI extends BaseUI {
   }
 
   private void moveProductToSellPoint() {
-    // 1. print list of products inside active warehouse from cell
-    // 2. choose product to move
-    // 3. choose available sell point
-    // 4. delete product from cell
-    // 5. move product to sell point
+    Warehouse warehouse = WarehouseSelector.selectActiveWarehouse(
+        company, this, "Select source warehouse: ");
+    if (warehouse == null) {
+      System.out.println("No available warehouse.");
+      return;
+    }
+
+    SellPoint sellPoint = SellPointSelector.selectActiveSellPoint(
+        company, this, "Select target sell point: ");
+    if (sellPoint == null) {
+      System.out.println("No available sell point.");
+      return;
+    }
+
+    Product product = ProductSelector.selectProductFromWarehouse(
+        warehouse, this, "Select product to move: ");
+    if (product == null) {
+      System.out.println("No available product.");
+      return;
+    }
+
+    int quantity = readIntInput("Enter quantity to move: ");
+    if (company.moveProductToSellPoint(product, quantity, warehouse,
+                                       sellPoint)) {
+      System.out.println("Product moved successfully.");
+    } else {
+      System.out.println("Failed to move product.");
+    }
   }
 
   private ProductType selectProductType(String prompt) {

@@ -2,10 +2,13 @@ package Storage.Warehouse;
 
 import Person.Employee.Manager.Manager;
 import Person.Employee.Worker.Worker;
+import Product.Product;
 import Storage.Cell.Cell;
 import Storage.Entity;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class Warehouse extends Entity implements Serializable {
   private ArrayList<Cell> cells;
@@ -26,6 +29,17 @@ public class Warehouse extends Entity implements Serializable {
   }
 
   public ArrayList<Cell> getCells() { return new ArrayList<>(cells); }
+
+  public ArrayList<Product> getProducts() {
+    ArrayList<Product> allProducts = new ArrayList<>();
+    for (Cell cell : cells) {
+      allProducts.addAll(cell.getProducts()
+                             .stream()
+                             .filter(Objects::nonNull)
+                             .collect(Collectors.toList()));
+    }
+    return allProducts;
+  }
 
   public int getTotalProducts() {
     return cells.stream().mapToInt(cell -> cell.getProducts().size()).sum();

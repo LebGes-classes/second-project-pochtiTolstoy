@@ -21,7 +21,7 @@ public class Cell extends Entity {
     return capacity - usedCapacity;
   }
 
-  public ArrayList<Product> getProducts() { return new ArrayList<>(products); }
+  public ArrayList<Product> getProducts() { return products; }
 
   public boolean hasProduct(Product product) {
     return products.stream().anyMatch(
