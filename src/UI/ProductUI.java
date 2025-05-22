@@ -2,6 +2,7 @@ package UI;
 
 import Company.Company;
 import Order.CompanyOrder.CompanyOrder;
+import Person.Customer.Customer;
 import Product.Product;
 import Storage.Cell.Cell;
 import Storage.Fabric.Fabric;
@@ -20,6 +21,7 @@ public class ProductUI extends BaseUI {
     System.out.println("2. List Available Products");
     System.out.println("3. Purchase Product");
     System.out.println("4. Move product to sell point");
+    System.out.println("6. Sell product to customer");
     System.out.println("0. Exit");
   }
 
@@ -43,12 +45,45 @@ public class ProductUI extends BaseUI {
     case 5:
       // TODO : move product to Warehouse
       break;
+    case 6:
+      sellProduct();
+      break;
     case 0:
       return false;
     default:
       printError("Invalid choice. Please try again.");
     }
     return true;
+  }
+
+  private void sellProduct() {
+    SellPoint sellPoint = SellPointSelector.selectActiveSellPoint(
+        company, this, "Select sell point: ");
+    if (sellPoint == null) {
+      System.out.println("No available sell point.");
+      return;
+    }
+
+    Product product = ProductSelector.selectProductFromSellPoint(
+        sellPoint, this, "Select product to sell: ");
+    if (product == null) {
+      System.out.println("No available product.");
+      return;
+    }
+
+    int quantity = readIntInput("Enter quantity to sell: ");
+    Customer customer =
+        CustomerSelector.selectCustomer(company, this, "Select customer: ");
+    if (customer == null) {
+      System.out.println("No available customer.");
+      return;
+    }
+
+    if (company.sellProductToCustomer(product, quantity, sellPoint, customer)) {
+      System.out.println("Product sold successfully.");
+    } else {
+      System.out.println("Failed to sell product.");
+    }
   }
 
   private void createProductSpecification() {

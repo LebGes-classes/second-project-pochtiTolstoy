@@ -70,19 +70,22 @@ public class SellPoint extends Entity {
     for (Iterator<Product> iterator = products.iterator();
          iterator.hasNext();) {
       Product current = iterator.next();
-      if (current.isSameProduct(product))
+      if (!current.isSameProduct(product)) {
         continue;
+      }
 
       int available = current.getQuantity();
-      if (available < quantity)
-        continue;
+      if (available < quantity) {
+        return false;
+      }
 
       int updatedQuantity = available - quantity;
       current.setQuantity(updatedQuantity);
       addRevenue(current.getPrice() * quantity);
 
-      if (updatedQuantity == 0)
+      if (updatedQuantity == 0) {
         iterator.remove();
+      }
       return true;
     }
     return false;

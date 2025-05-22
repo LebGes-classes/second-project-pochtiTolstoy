@@ -3,6 +3,7 @@ package Util;
 import Company.Company;
 import Product.Product;
 import Product.ProductSpecification;
+import Storage.SellPoint.SellPoint;
 import Storage.Warehouse.Warehouse;
 import UI.BaseUI;
 import java.util.ArrayList;
@@ -32,6 +33,28 @@ public final class ProductSelector {
                                                    BaseUI ui, String prompt) {
     ui.printInfo(prompt);
     ArrayList<Product> products = warehouse.getProducts();
+    if (products.isEmpty()) {
+      System.out.println("No products available.");
+      return null;
+    }
+
+    ui.printInfo(prompt);
+    for (int i = 0; i < products.size(); ++i) {
+      ui.printInfo((i + 1) + ". " + products.get(i));
+    }
+
+    int choice = ui.readIntInput("Enter product number: ") - 1;
+    if (choice < 0 || choice >= products.size()) {
+      ui.printInfo("Invalid product selection.");
+      return null;
+    }
+    return products.get(choice);
+  }
+
+  public static Product selectProductFromSellPoint(SellPoint sellPoint,
+                                                   BaseUI ui, String prompt) {
+    ui.printInfo(prompt);
+    ArrayList<Product> products = sellPoint.getProducts();
     if (products.isEmpty()) {
       System.out.println("No products available.");
       return null;
