@@ -22,6 +22,7 @@ public class ProductUI extends BaseUI {
     System.out.println("3. Purchase Product");
     System.out.println("4. Move product to sell point");
     System.out.println("6. Sell product to customer");
+    System.out.println("7. Return product from customer");
     System.out.println("0. Exit");
   }
 
@@ -48,12 +49,59 @@ public class ProductUI extends BaseUI {
     case 6:
       sellProduct();
       break;
+    case 7:
+      // TODO : return product from customer
+      returnProductFromCustomer();
+      break;
     case 0:
       return false;
     default:
       printError("Invalid choice. Please try again.");
     }
     return true;
+  }
+
+  private void returnProductFromCustomer() {
+    // 1. select customer
+    // 2. select product from him (add list to customer with products)
+    // 2.1 choose quantity to return
+    // 3. choose active sell point
+    // 4. move product from customer to sellPoint
+    // 5. recalculate expenses
+    Customer customer =
+        CustomerSelector.selectCustomer(company, this, "Choose customer: ");
+    if (customer == null) {
+      printError("No customers available!");
+      return;
+    }
+
+    Product productToReturn = ProductSelector.selectProductFromCustomer(
+        customer, this, "Choose product to return");
+    if (productToReturn == null) {
+      printError("No products available!");
+      return;
+    }
+
+    int maxQuant = productToReturn.getQuantity();
+    int returnQuant = readIntInput("Enter quantity to return: ");
+    if (returnQuant > maxQuant || returnQuant <= 0) {
+      printError("Invalid quantity!");
+      return;
+    }
+
+    SellPoint sellPoint = SellPointSelector.selectActiveSellPoint(
+        company, this, "Select sell point to return product: ");
+    if (sellPoint == null) {
+      printError("No sell points available!");
+      return;
+    }
+
+    if (company.returnProductFromCustomer(productToReturn, returnQuant,
+                                          sellPoint, customer)) {
+      System.out.println("Product returned successfully.");
+    } else {
+      System.out.println("Failed to return product.");
+    }
   }
 
   private void sellProduct() {
