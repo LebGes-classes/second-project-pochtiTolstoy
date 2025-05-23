@@ -104,27 +104,71 @@ public class EmployeeUI extends BaseUI {
   }
 
   private void listInactiveEmployees() {
-    ArrayList<Employee> employees = company.getInactiveEmployees();
-    if (employees.isEmpty()) {
+    ArrayList<Employee> employees = company.getAllEmployees();
+    ArrayList<Employee> inactiveEmployees = new ArrayList<>();
+    for (Employee employee : employees) {
+      if (!employee.isActive()) {
+        inactiveEmployees.add(employee);
+      }
+    }
+    if (inactiveEmployees.isEmpty()) {
       printInfo("No inactive employees.");
       return;
     }
-    for (Employee employee : employees) {
+    for (Employee employee : inactiveEmployees) {
       printInfo(employee.toString());
     }
   }
 
   private void fireEmployee() {
-    Employee employee = EmployeeSelector.selectActiveEmployee(
-        company, this, "Select employee to fire: ", Employee.class,
-        "No employees available!");
-    if (employee == null)
+    Employee employeeToFire = EmployeeSelector.selectActiveEmployee(
+        company, this, "Select active emplyee: ", Employee.class,
+        "No active employee to fire");
+    if (employeeToFire == null) {
       return;
-    company.fireEmployee(employee);
-    printSuccess("Employee fired successfully.");
+    }
+
+    ArrayList<Employee> inactiveEmployees = new ArrayList<>();
+    if (employeeToFire instanceof Manager) {
+      inactiveEmployees.addAll(company.getInactiveManagers());
+    } else if (employeeToFire instanceof Worker) {
+      inactiveEmployees.addAll(company.getInactiveWorkers());
+    }
+
+    if (inactiveEmployees.isEmpty()) {
+      System.out.println(
+          "No inactive employees available to replace the fired employee.");
+      return;
+    }
+
+    System.out.println("Select replacement employee:");
+    for (int i = 0; i < inactiveEmployees.size(); i++) {
+      System.out.printf("%d. %s%n", i + 1, inactiveEmployees.get(i));
+    }
+
+    int replacementChoice =
+        readIntInput("Enter replacement employee number: ") - 1;
+    if (replacementChoice < 0 ||
+        replacementChoice >= inactiveEmployees.size()) {
+      System.out.println("Invalid replacement employee selection.");
+      return;
+    }
+
+    Employee replacementEmployee = inactiveEmployees.get(replacementChoice);
+
+    if (company.replaceEmployee(employeeToFire, replacementEmployee)) {
+      System.out.println("Employee replaced successfully.");
+    } else {
+      System.out.println("Failed to replace employee.");
+    }
   }
 
   private void showEmployeeInfo() {
+    // Employee employee = selectEmployee("Select employee to view information:
+    // "); if (employee == null) {
+    //   printError("No employees available.");
+    //   return;
+    // }
     Employee employee = EmployeeSelector.selectEmployee(
         company, this, "Select employee to show info: ", Employee.class,
         "No employees available!");
@@ -132,4 +176,36 @@ public class EmployeeUI extends BaseUI {
       return;
     printInfo(employee.toString());
   }
+
+  // private Employee selectEmployee(String prompt) {
+  //   ArrayList<Employee> employees = company.getAllEmployees();
+  //   if (employees.isEmpty()) {
+  //     return null;
+  //   }
+  //   printInfo(prompt);
+  //   for (int i = 0; i < employees.size(); i++) {
+  //     printInfo(String.format("%d. %s", i + 1, employees.get(i)));
+  //   }
+  //   int choice = readIntInput("Enter choice: ") - 1;
+  //   if (choice < 0 || choice >= employees.size()) {
+  //     return null;
+  //   }
+  //   return employees.get(choice);
+  // }
+  //
+  // private Employee selectActiveEmployee(String prompt) {
+  //   ArrayList<Employee> employees = company.getActiveEmployees();
+  //   if (employees.isEmpty()) {
+  //     return null;
+  //   }
+  //   printInfo(prompt);
+  //   for (int i = 0; i < employees.size(); i++) {
+  //     printInfo(String.format("%d. %s", i + 1, employees.get(i)));
+  //   }
+  //   int choice = readIntInput("Enter choice: ") - 1;
+  //   if (choice < 0 || choice >= employees.size()) {
+  //     return null;
+  //   }
+  //   return employees.get(choice);
+  // }
 }

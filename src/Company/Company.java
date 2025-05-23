@@ -181,6 +181,20 @@ public class Company {
         .filter(emp -> !emp.isActive())
         .collect(Collectors.toCollection(ArrayList::new));
   }
+  private <T extends Employee> ArrayList<T> getInactiveByType(Class<T> type) {
+    return employees.stream()
+        .filter(emp -> !emp.isActive() && type.isInstance(emp))
+        .map(type::cast)
+        .collect(Collectors.toCollection(ArrayList::new));
+  }
+
+  public ArrayList<Manager> getInactiveManagers() {
+    return getInactiveByType(Manager.class);
+  }
+
+  public ArrayList<Worker> getInactiveWorkers() {
+    return getInactiveByType(Worker.class);
+  }
 
   public ArrayList<Fabric> getAllFabrics() { return new ArrayList<>(fabrics); }
 
