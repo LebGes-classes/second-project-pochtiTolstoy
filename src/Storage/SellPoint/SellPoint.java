@@ -21,7 +21,9 @@ public class SellPoint extends Entity {
     super(name, description);
     this.isActive = true;
     this.manager = manager;
+    this.manager.setActive(true);
     this.worker = worker;
+    this.worker.setActive(true);
     this.products = new ArrayList<>();
     this.totalRevenue = 0.0;
     this.totalExpenses = 0.0;

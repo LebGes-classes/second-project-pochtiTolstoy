@@ -204,7 +204,6 @@ public class Company {
     return true;
   }
 
-  // !
   public boolean moveProductBetweenCells(Product product, int quantity,
                                          Cell srcCell, Cell destCell) {
     if (destCell.addProduct(product, quantity)) {
