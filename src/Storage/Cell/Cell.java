@@ -39,11 +39,8 @@ public class Cell extends Entity {
         .sum();
   }
 
-  public void addProduct(Product product) {
-    if (getAvailableCapacity() < product.getQuantity()) {
-      throw new IllegalStateException("Cell does not have enough capacity");
-    }
-    products.add(new Product(product));
+  public boolean addProduct(Product product) {
+    return addProduct(product, product.getQuantity());
   }
 
   public boolean addProduct(Product product, int quantity) {
@@ -83,8 +80,8 @@ public class Cell extends Entity {
 
   @Override
   public String toString() {
-    return String.format("Cell{id=%s, name='%s', capacity=%d/%d, products=%d}",
-                         getId(), getName(), getAvailableCapacity(), capacity,
-                         products.size());
+    return String.format("Cell {id=%s, name='%s', capacity=%d/%d, products=%d}",
+                         getId(), getName(), capacity - getAvailableCapacity(),
+                         capacity, products.size());
   }
 }

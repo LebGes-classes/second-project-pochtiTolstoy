@@ -226,12 +226,13 @@ public class ProductUI extends BaseUI {
     System.out.println("Choose cell:");
     for (int i = 0; i < cells.size(); ++i) {
       if (cells.get(i).getAvailableCapacity() >= quantity) {
-        System.out.println(++availableCells + ". " + cells.get(i).toString());
+        System.out.println((i + 1) + ". " + cells.get(i).toString());
+        ++availableCells;
       }
     }
 
     int choice = readIntInput("Enter choice: ") - 1;
-    if (choice < 0 || choice >= availableCells) {
+    if (choice < 0) {
       System.out.println("Invalid cell selection");
       return;
     }
