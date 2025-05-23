@@ -5,7 +5,7 @@ import Person.Employee.Employee;
 import Person.Employee.Manager.Manager;
 import Person.Employee.Worker.Worker;
 import Storage.SellPoint.SellPoint;
-import Util.EmployeeSelector;
+import Util.*;
 import java.util.ArrayList;
 
 public class SellPointUI extends BaseUI {
@@ -21,6 +21,7 @@ public class SellPointUI extends BaseUI {
     System.out.println("5. Change Sell Point Manager");
     System.out.println("6. Sell Point Information");
     System.out.println("7. Sell Point Products Information");
+    System.out.println("8. Reopen Sell Point");
     System.out.println("0. Exit");
   }
 
@@ -50,12 +51,41 @@ public class SellPointUI extends BaseUI {
     case 7:
       showSellPointProductsInfo();
       break;
+    case 8:
+      reopenSellPoint();
+      break;
     case 0:
       return false;
     default:
       printError("Invalid choice. Please try again.");
     }
     return true;
+  }
+
+  private void reopenSellPoint() {
+    SellPoint sellPoint = SellPointSelector.selectInactiveSellPoint(
+        company, this, "Select sell point to reopen: ");
+    if (sellPoint == null) {
+      printError("No warehouses available.");
+      return;
+    }
+
+    Manager manager = EmployeeSelector.selectInactiveEmployee(
+        company, this, "Select manager: ", Manager.class,
+        "No managers available!");
+    if (manager == null)
+      return;
+
+    Worker worker = EmployeeSelector.selectInactiveEmployee(
+        company, this, "Select worker: ", Worker.class, "No worker available!");
+    if (worker == null)
+      return;
+
+    if (company.reopenSellPoint(sellPoint, manager, worker)) {
+      printSuccess("Sell point reopened successfully.");
+    } else {
+      printError("Failed to reopen sell point.");
+    }
   }
 
   private void createSellPoint() {

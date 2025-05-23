@@ -35,11 +35,11 @@ public class SellPoint extends Entity {
 
   public Manager getManager() { return manager; }
 
-  public void setManager(Manager manager) { this.manager = manager; }
+  public void addManager(Manager manager) { this.manager = manager; }
 
   public Worker getWorker() { return worker; }
 
-  public void setWorker(Worker worker) { this.worker = worker; }
+  public void addWorker(Worker worker) { this.worker = worker; }
 
   public ArrayList<Product> getProducts() { return products; }
 

@@ -81,6 +81,9 @@ public class Company {
 
   public void closeSellPoint(SellPoint sellPoint) {
     sellPoint.setActive(false);
+    // Deactivate sell point employees
+    sellPoint.getManager().setActive(false);
+    sellPoint.getWorker().setActive(false);
     saveData();
   }
 
@@ -97,6 +100,12 @@ public class Company {
   public ArrayList<SellPoint> getActiveSellPoints() {
     return sellPoints.stream()
         .filter(SellPoint::isActive)
+        .collect(Collectors.toCollection(ArrayList::new));
+  }
+
+  public ArrayList<SellPoint> getInactiveSellPoints() {
+    return sellPoints.stream()
+        .filter(sp -> !sp.isActive())
         .collect(Collectors.toCollection(ArrayList::new));
   }
 
@@ -149,7 +158,7 @@ public class Company {
     // Find and update the employee in all sell points
     for (SellPoint sellPoint : sellPoints) {
       if (sellPoint.getManager() == oldEmployee) {
-        sellPoint.setManager((Manager)newEmployee);
+        sellPoint.addManager((Manager)newEmployee);
       }
     }
 
@@ -279,6 +288,21 @@ public class Company {
     warehouse.setActive(true);
     warehouse.setManager(manager);
     warehouse.addWorker(worker);
+    manager.setActive(true);
+    worker.setActive(true);
+    saveData();
+    return true;
+  }
+
+  public boolean reopenSellPoint(SellPoint sellPoint, Manager manager,
+                                 Worker worker) {
+    if (manager == null || worker == null) {
+      return false;
+    }
+
+    sellPoint.setActive(true);
+    sellPoint.addManager(manager);
+    sellPoint.addWorker(worker);
     manager.setActive(true);
     worker.setActive(true);
     saveData();
