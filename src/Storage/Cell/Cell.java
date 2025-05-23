@@ -46,13 +46,18 @@ public class Cell extends Entity {
     products.add(new Product(product));
   }
 
-  public void addProduct(Product product, int quantity) {
+  public boolean addProduct(Product product, int quantity) {
     if (getAvailableCapacity() < quantity) {
-      throw new IllegalStateException("Cell does not have enough capacity");
+      return false;
     }
-    Product newProduct = new Product(product);
-    newProduct.setQuantity(quantity);
-    products.add(newProduct);
+    for (Product p : products) {
+      if (p.isSameProduct(product)) {
+        p.setQuantity(p.getQuantity() + quantity);
+        return true;
+      }
+    }
+    products.add(new Product(product, quantity));
+    return true;
   }
 
   public void removeProduct(Product product) { products.remove(product); }
@@ -62,8 +67,7 @@ public class Cell extends Entity {
     ArrayList<Product> toRemove = new ArrayList<>();
 
     for (Product p : products) {
-      if (p.getName().equals(product.getName()) &&
-          p.getType() == product.getType()) {
+      if (p.isSameProduct(product)) {
         if (p.getQuantity() <= remainingQuantity) {
           remainingQuantity -= p.getQuantity();
           toRemove.add(p);

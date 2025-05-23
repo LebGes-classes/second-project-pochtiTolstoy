@@ -21,6 +21,7 @@ public class ProductUI extends BaseUI {
     System.out.println("2. List Available Products");
     System.out.println("3. Purchase Product");
     System.out.println("4. Move product to sell point");
+    System.out.println("5. Move product to other cell");
     System.out.println("6. Sell product to customer");
     System.out.println("7. Return product from customer");
     System.out.println("0. Exit");
@@ -44,13 +45,12 @@ public class ProductUI extends BaseUI {
       moveProductToSellPoint();
       break;
     case 5:
-      // TODO : move product to Warehouse
+      moveProductToOtherCell();
       break;
     case 6:
       sellProduct();
       break;
     case 7:
-      // TODO : return product from customer
       returnProductFromCustomer();
       break;
     case 0:
@@ -61,13 +61,61 @@ public class ProductUI extends BaseUI {
     return true;
   }
 
+  private void moveProductToOtherCell() {
+    // 1. choose src active warehouse
+    // 2. choose cell
+    // 3. choose product in cell
+    // 4. choose dest active warehouse (can be the same)
+    // 5. choose cell in dest warehouse
+    // 6. move product
+    Warehouse srcWarehouse = WarehouseSelector.selectActiveWarehouse(
+        company, this, "Choose active warehouse: ");
+    if (srcWarehouse == null) {
+      printError("No warehouses available!");
+      return;
+    }
+
+    Cell srcCell = CellSelector.selectCell(srcWarehouse, this, "Choose cell: ");
+    if (srcCell == null) {
+      System.out.println("No cells available!");
+      return;
+    }
+
+    Product product = ProductSelector.selectProductFromCell(
+        srcCell, this, "Select product to move: ");
+    if (product == null) {
+      System.out.println("No available product.");
+      return;
+    }
+
+    int quantity = readIntInput("Enter quantity: ");
+    if (quantity <= 0 || quantity > product.getQuantity()) {
+      printError("Invaild quantity!");
+      return;
+    }
+
+    Warehouse destWarehouse = WarehouseSelector.selectActiveWarehouse(
+        company, this, "Choose active warehouse: ");
+    if (destWarehouse == null) {
+      printError("No warehouses available!");
+      return;
+    }
+
+    Cell destCell =
+        CellSelector.selectCell(destWarehouse, this, "Choose target cell: ");
+    if (destCell == null) {
+      printError("No cells available!");
+      return;
+    }
+
+    if (company.moveProductBetweenCells(product, quantity, srcCell, destCell)) {
+      printInfo("Move product to new cell");
+    } else {
+      printError("Can't add product to target cell!");
+    }
+  }
+
   private void returnProductFromCustomer() {
-    // 1. select customer
-    // 2. select product from him (add list to customer with products)
-    // 2.1 choose quantity to return
-    // 3. choose active sell point
-    // 4. move product from customer to sellPoint
-    // 5. recalculate expenses
     Customer customer =
         CustomerSelector.selectCustomer(company, this, "Choose customer: ");
     if (customer == null) {

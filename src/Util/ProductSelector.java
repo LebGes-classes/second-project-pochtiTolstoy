@@ -4,6 +4,7 @@ import Company.Company;
 import Person.Customer.Customer;
 import Product.Product;
 import Product.ProductSpecification;
+import Storage.Cell.Cell;
 import Storage.SellPoint.SellPoint;
 import Storage.Warehouse.Warehouse;
 import UI.BaseUI;
@@ -34,6 +35,28 @@ public final class ProductSelector {
                                                    BaseUI ui, String prompt) {
     ui.printInfo(prompt);
     ArrayList<Product> products = warehouse.getProducts();
+    if (products.isEmpty()) {
+      System.out.println("No products available.");
+      return null;
+    }
+
+    ui.printInfo(prompt);
+    for (int i = 0; i < products.size(); ++i) {
+      ui.printInfo((i + 1) + ". " + products.get(i));
+    }
+
+    int choice = ui.readIntInput("Enter product number: ") - 1;
+    if (choice < 0 || choice >= products.size()) {
+      ui.printInfo("Invalid product selection.");
+      return null;
+    }
+    return products.get(choice);
+  }
+
+  public static Product selectProductFromCell(Cell cell, BaseUI ui,
+                                              String prompt) {
+    ui.printInfo(prompt);
+    ArrayList<Product> products = cell.getProducts();
     if (products.isEmpty()) {
       System.out.println("No products available.");
       return null;

@@ -204,28 +204,15 @@ public class Company {
     return true;
   }
 
-  public boolean moveProductBetweenWarehouses(Product product, int quantity,
-                                              Warehouse sourceWarehouse,
-                                              Cell sourceCell,
-                                              Warehouse targetWarehouse,
-                                              Cell targetCell) {
-    if (!sourceWarehouse.isActive() || !targetWarehouse.isActive()) {
-      return false;
+  // !
+  public boolean moveProductBetweenCells(Product product, int quantity,
+                                         Cell srcCell, Cell destCell) {
+    if (destCell.addProduct(product, quantity)) {
+      srcCell.removeProduct(product, quantity);
+      saveData();
+      return true;
     }
-
-    if (!sourceCell.hasProduct(product) ||
-        sourceCell.getProductQuantity(product) < quantity) {
-      return false;
-    }
-
-    if (targetCell.getAvailableCapacity() < quantity) {
-      return false;
-    }
-
-    sourceCell.removeProduct(product, quantity);
-    targetCell.addProduct(product, quantity);
-    saveData();
-    return true;
+    return false;
   }
 
   public boolean sellProductToCustomer(Product product, int quantity,

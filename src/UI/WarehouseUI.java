@@ -72,13 +72,13 @@ public class WarehouseUI extends BaseUI {
     String name = readStringInput("Enter warehouse name: ");
     String description = readStringInput("Enter warehouse description: ");
 
-    Manager manager = EmployeeSelector.selectEmployee(
+    Manager manager = EmployeeSelector.selectInactiveEmployee(
         company, this, "Select manager: ", Manager.class,
         "No managers available!");
     if (manager == null)
       return;
 
-    Worker worker = EmployeeSelector.selectEmployee(
+    Worker worker = EmployeeSelector.selectInactiveEmployee(
         company, this, "Select worker: ", Worker.class,
         "No workers available!");
     if (worker == null)
