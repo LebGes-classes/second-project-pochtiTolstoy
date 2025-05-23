@@ -62,12 +62,6 @@ public class ProductUI extends BaseUI {
   }
 
   private void moveProductToOtherCell() {
-    // 1. choose src active warehouse
-    // 2. choose cell
-    // 3. choose product in cell
-    // 4. choose dest active warehouse (can be the same)
-    // 5. choose cell in dest warehouse
-    // 6. move product
     Warehouse srcWarehouse = WarehouseSelector.selectActiveWarehouse(
         company, this, "Choose active warehouse: ");
     if (srcWarehouse == null) {

@@ -159,9 +159,7 @@ public class Company {
     return true;
   }
 
-  public ArrayList<Employee> getAllEmployees() {
-    return new ArrayList<>(employees);
-  }
+  public ArrayList<Employee> getAllEmployees() { return employees; }
 
   public ArrayList<Employee> getActiveEmployees() {
     return employees.stream()
@@ -295,10 +293,7 @@ public class Company {
     }
 
     Manager oldManager = warehouse.getManager();
-    oldManager.setActive(false);
-    warehouse.setManager(newManager);
-    newManager.setActive(true);
-    saveData();
+    replaceEmployee(oldManager, newManager);
     return true;
   }
 
@@ -310,10 +305,7 @@ public class Company {
     }
 
     Manager oldManager = sellPoint.getManager();
-    oldManager.setActive(false);
-    sellPoint.setManager(newManager);
-    newManager.setActive(true);
-    saveData();
+    replaceEmployee(oldManager, newManager);
     return true;
   }
 
