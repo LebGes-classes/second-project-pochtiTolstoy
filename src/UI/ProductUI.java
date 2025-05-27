@@ -215,6 +215,11 @@ public class ProductUI extends BaseUI {
     }
 
     ArrayList<Cell> cells = warehouse.getCells();
+    if (cells == null) {
+      System.out.println("No available cells!");
+      return;
+    }
+
     int quantity = product.getQuantity();
     int availableCells = 0;
     System.out.println("Choose cell:");
@@ -226,13 +231,16 @@ public class ProductUI extends BaseUI {
     }
 
     int choice = readIntInput("Enter choice: ") - 1;
-    if (choice < 0) {
+    if (choice < 0 || choice >= cells.size()) {
       System.out.println("Invalid cell selection");
       return;
     }
 
-    cells.get(choice).addProduct(product);
-    System.out.println("Product purchase is successful.");
+    if (cells.get(choice).addProduct(product)) {
+      System.out.println("Product purchase is successful.");
+    } else {
+      System.out.println("Product purchase failure.");
+    }
   }
 
   private void moveProductToSellPoint() {
