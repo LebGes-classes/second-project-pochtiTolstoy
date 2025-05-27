@@ -2,6 +2,7 @@ package DataLoader;
 import Person.Customer.Customer;
 import Person.Employee.Employee;
 import Product.Product;
+import Product.ProductSpecification;
 import Storage.Fabric.Fabric;
 import Storage.SellPoint.SellPoint;
 import Storage.Warehouse.Warehouse;
@@ -73,7 +74,7 @@ public class DataLoaderImpl implements DataLoader {
   }
 
   @Override
-  public void saveProductsToPurchase(ArrayList<Product> products) {
+  public void saveProductsToPurchase(ArrayList<ProductSpecification> products) {
     saveToFile(products, PRODUCTS_FILE);
   }
 
@@ -103,7 +104,7 @@ public class DataLoaderImpl implements DataLoader {
   }
 
   @Override
-  public ArrayList<Product> loadProductsToPurchase() {
+  public ArrayList<ProductSpecification> loadProductsToPurchase() {
     return loadFromFile(PRODUCTS_FILE);
   }
 

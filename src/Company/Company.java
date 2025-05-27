@@ -38,21 +38,21 @@ public class Company {
                               Worker worker) {
     Warehouse warehouse = new Warehouse(name, description, manager, worker);
     warehouses.add(warehouse);
-    saveData();
+    // saveData();
   }
 
   public void createCell(String name, String description, int capacity,
                          Warehouse warehouse) {
     Cell cell = new Cell(name, description, capacity);
     warehouse.addCell(cell);
-    saveData();
+    // saveData();
   }
 
   public void createSellPoint(String name, String description, Manager manager,
                               Worker worker) {
     SellPoint sellPoint = new SellPoint(name, description, manager, worker);
     sellPoints.add(sellPoint);
-    saveData();
+    // saveData();
   }
 
   public void createProductSpecification(String name, String description,
@@ -61,14 +61,14 @@ public class Company {
     ProductSpecification product =
         new ProductSpecification(name, description, price, type);
     productsToPurchase.add(product);
-    saveData();
+    // saveData();
   }
 
   public void createFabric(String name, String description, ProductType type) {
     Fabric fabric =
         new Fabric(name, description, type, type.getTimeToProduce());
     fabrics.add(fabric);
-    saveData();
+    // saveData();
   }
 
   public void closeWarehouse(Warehouse warehouse) {
@@ -76,7 +76,7 @@ public class Company {
     // Deactivate warehouse employees
     warehouse.getManager().setActive(false);
     warehouse.getWorker().setActive(false);
-    saveData();
+    // saveData();
   }
 
   public void closeSellPoint(SellPoint sellPoint) {
@@ -84,7 +84,7 @@ public class Company {
     // Deactivate sell point employees
     sellPoint.getManager().setActive(false);
     sellPoint.getWorker().setActive(false);
-    saveData();
+    // saveData();
   }
 
   public ArrayList<Warehouse> getActiveWarehouses() {
@@ -122,7 +122,7 @@ public class Company {
     Employee employee =
         new Manager(name, description, contactInfo, age, position, salary);
     employees.add(employee);
-    saveData();
+    // saveData();
   }
 
   public void hireWorker(String name, String description, String contactInfo,
@@ -130,12 +130,12 @@ public class Company {
     Employee employee =
         new Worker(name, description, contactInfo, age, position, salary);
     employees.add(employee);
-    saveData();
+    // saveData();
   }
 
   public boolean fireEmployee(Employee employee) {
     employee.setActive(false);
-    saveData();
+    // saveData();
     return true;
   }
 
@@ -164,7 +164,7 @@ public class Company {
 
     oldEmployee.setActive(false);
     newEmployee.setActive(true);
-    saveData();
+    // saveData();
     return true;
   }
 
@@ -221,7 +221,7 @@ public class Company {
     moveProduct.setQuantity(quantity);
     sellPoint.addProduct(moveProduct);
     sourceCell.removeProduct(product, quantity);
-    saveData();
+    // saveData();
     return true;
   }
 
@@ -229,7 +229,7 @@ public class Company {
                                          Cell srcCell, Cell destCell) {
     if (destCell.addProduct(product, quantity)) {
       srcCell.removeProduct(product, quantity);
-      saveData();
+      // saveData();
       return true;
     }
     return false;
@@ -243,7 +243,7 @@ public class Company {
 
     if (sellPoint.sellProduct(product, quantity)) {
       customer.addPurchase(product, quantity);
-      saveData();
+      // saveData();
       return true;
     }
     return false;
@@ -258,7 +258,7 @@ public class Company {
 
     if (sellPoint.returnProduct(product, quantity)) {
       customer.removePurchase(product, quantity);
-      saveData();
+      // saveData();
       return true;
     }
     return false;
@@ -290,7 +290,7 @@ public class Company {
                           int age) {
     Customer customer = new Customer(name, description, contactInfo, age);
     customers.add(customer);
-    saveData();
+    // saveData();
   }
 
   public boolean reopenWarehouse(Warehouse warehouse, Manager manager,
@@ -304,7 +304,7 @@ public class Company {
     warehouse.addWorker(worker);
     manager.setActive(true);
     worker.setActive(true);
-    saveData();
+    // saveData();
     return true;
   }
 
@@ -319,7 +319,7 @@ public class Company {
     sellPoint.addWorker(worker);
     manager.setActive(true);
     worker.setActive(true);
-    saveData();
+    // saveData();
     return true;
   }
 
@@ -446,7 +446,7 @@ public class Company {
     return info.toString();
   }
 
-  private void saveData() {
+  public void saveData() {
     dataLoader.saveWarehouses(warehouses);
     dataLoader.saveSellPoints(sellPoints);
     dataLoader.saveEmployees(employees);

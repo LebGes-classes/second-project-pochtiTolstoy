@@ -7,5 +7,6 @@ public class Main {
     DataLoader data = new DataLoaderImpl();
     Company company = new Company(data);
     (new UI(company)).start();
+    company.saveData();
   }
 }

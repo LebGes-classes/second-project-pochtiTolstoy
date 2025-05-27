@@ -164,11 +164,6 @@ public class EmployeeUI extends BaseUI {
   }
 
   private void showEmployeeInfo() {
-    // Employee employee = selectEmployee("Select employee to view information:
-    // "); if (employee == null) {
-    //   printError("No employees available.");
-    //   return;
-    // }
     Employee employee = EmployeeSelector.selectEmployee(
         company, this, "Select employee to show info: ", Employee.class,
         "No employees available!");
@@ -176,36 +171,4 @@ public class EmployeeUI extends BaseUI {
       return;
     printInfo(employee.toString());
   }
-
-  // private Employee selectEmployee(String prompt) {
-  //   ArrayList<Employee> employees = company.getAllEmployees();
-  //   if (employees.isEmpty()) {
-  //     return null;
-  //   }
-  //   printInfo(prompt);
-  //   for (int i = 0; i < employees.size(); i++) {
-  //     printInfo(String.format("%d. %s", i + 1, employees.get(i)));
-  //   }
-  //   int choice = readIntInput("Enter choice: ") - 1;
-  //   if (choice < 0 || choice >= employees.size()) {
-  //     return null;
-  //   }
-  //   return employees.get(choice);
-  // }
-  //
-  // private Employee selectActiveEmployee(String prompt) {
-  //   ArrayList<Employee> employees = company.getActiveEmployees();
-  //   if (employees.isEmpty()) {
-  //     return null;
-  //   }
-  //   printInfo(prompt);
-  //   for (int i = 0; i < employees.size(); i++) {
-  //     printInfo(String.format("%d. %s", i + 1, employees.get(i)));
-  //   }
-  //   int choice = readIntInput("Enter choice: ") - 1;
-  //   if (choice < 0 || choice >= employees.size()) {
-  //     return null;
-  //   }
-  //   return employees.get(choice);
-  // }
 }
