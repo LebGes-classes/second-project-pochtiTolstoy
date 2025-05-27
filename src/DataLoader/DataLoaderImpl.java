@@ -10,16 +10,23 @@ import java.io.*;
 import java.util.ArrayList;
 
 public class DataLoaderImpl implements DataLoader {
-  private static final String DATA_DIR = "../res";
-  private static final String WAREHOUSES_FILE = DATA_DIR + "/warehouses.ser";
-  private static final String SELL_POINTS_FILE = DATA_DIR + ("/sell_points."
-                                                             + "ser");
-  private static final String EMPLOYEES_FILE = DATA_DIR + "/employees.ser";
-  private static final String CUSTOMERS_FILE = DATA_DIR + "/customers.ser";
-  private static final String PRODUCTS_FILE = DATA_DIR + "/products.ser";
-  private static final String FABRICS_FILE = DATA_DIR + "/fabrics.ser";
+  private String WAREHOUSES_FILE;
+  private String SELL_POINTS_FILE;
+  private String EMPLOYEES_FILE;
+  private String CUSTOMERS_FILE;
+  private String PRODUCTS_FILE;
+  private String FABRICS_FILE;
+  private String DATA_DIR;
 
-  public DataLoaderImpl() {
+  public DataLoaderImpl(String pathToFile) {
+    DATA_DIR = pathToFile;
+    WAREHOUSES_FILE = DATA_DIR + "/warehouses.ser";
+    SELL_POINTS_FILE = DATA_DIR + ("/sell_points."
+                                   + "ser");
+    EMPLOYEES_FILE = DATA_DIR + "/employees.ser";
+    CUSTOMERS_FILE = DATA_DIR + "/customers.ser";
+    PRODUCTS_FILE = DATA_DIR + "/products.ser";
+    FABRICS_FILE = DATA_DIR + "/fabrics.ser";
     File directory = new File(DATA_DIR);
     if (!directory.exists()) {
       directory.mkdir();

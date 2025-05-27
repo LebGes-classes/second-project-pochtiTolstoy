@@ -1,27 +1,48 @@
 JAVAC = javac
-CFLAGS = -g
+JAVA = java
+CFLAGS = -g -Xlint:unchecked
+
+# Path configurations
 SRC_DIR = .
-BIN_DIR = ../build
+TEST_DIR = ../tests
+BIN_DIR = ../bin/classes
+TEST_BIN_DIR = ../bin/test-classes
+MAIN_CLASS = Main
+TEST_RES_DIR = $(TEST_DIR)/res
 
-SRCS = $(shell find $(SRC_DIR) -name '*.java')
-CLASS = $(patsubst $(SRC_DIR)/%.java, $(BIN_DIR)/%.class, $(SRCS))
+# JUnit paths (single standalone JAR)
+JUNIT_CP = /usr/share/java/junit-platform-console-standalone.jar
 
-all: $(CLASS)
+# File discovery
+MAIN_SOURCES = $(shell find $(SRC_DIR) -name '*.java')
+TEST_SOURCES = $(shell find $(TEST_DIR) -name '*.java')
 
-$(BIN_DIR)/%.class: $(SRC_DIR)/%.java
+.PHONY: all compile test-compile test run clean clean-test-res
+
+all: compile
+
+compile:
 	@mkdir -p $(BIN_DIR)
-	$(JAVAC) $(CFLAGS) -d $(BIN_DIR) $<
+	$(JAVAC) $(CFLAGS) -d $(BIN_DIR) $(MAIN_SOURCES)
+
+test-compile: compile
+	@mkdir -p $(TEST_BIN_DIR)
+	$(JAVAC) $(CFLAGS) -d $(TEST_BIN_DIR) \
+	-cp "$(BIN_DIR):$(JUNIT_CP)" \
+	$(TEST_SOURCES)
+
+test: test-compile
+	$(JAVA) -cp "$(BIN_DIR):$(TEST_BIN_DIR):$(JUNIT_CP)" \
+	org.junit.platform.console.ConsoleLauncher \
+	--scan-class-path \
+	--class-path "$(BIN_DIR):$(TEST_BIN_DIR)"
+	@$(MAKE) clean-test-res
+
+run: compile
+	$(JAVA) -cp $(BIN_DIR) $(MAIN_CLASS)
 
 clean:
-	rm -rf $(BIN_DIR)
+	rm -rf $(BIN_DIR) $(TEST_BIN_DIR)
 
-run: all
-	java -cp $(BIN_DIR) Main
-
-debug: all
-	jdb -sourcepath . -classpath ../build Main
-
-debug_ini: all
-	cp ../debug/jdb.ini .
-	jdb -sourcepath . -classpath ../build Main
-	rm jdb.ini
+clean-test-res:
+	rm -rf $(TEST_RES_DIR)/*

@@ -4,7 +4,7 @@ import UI.UI;
 
 public class Main {
   public static void main(String[] args) {
-    DataLoader data = new DataLoaderImpl();
+    DataLoader data = new DataLoaderImpl("../res");
     Company company = new Company(data);
     (new UI(company)).start();
     company.saveData();
