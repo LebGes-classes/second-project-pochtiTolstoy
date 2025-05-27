@@ -196,6 +196,20 @@ public class Company {
     return getInactiveByType(Worker.class);
   }
 
+  public ArrayList<Manager> getAllManagers() {
+    return employees.stream()
+        .filter(Manager.class ::isInstance)
+        .map(Manager.class ::cast)
+        .collect(Collectors.toCollection(ArrayList::new));
+  }
+
+  public ArrayList<Worker> getAllWorkers() {
+    return employees.stream()
+        .filter(Worker.class ::isInstance)
+        .map(Worker.class ::cast)
+        .collect(Collectors.toCollection(ArrayList::new));
+  }
+
   public ArrayList<Fabric> getAllFabrics() { return new ArrayList<>(fabrics); }
 
   public boolean moveProductToSellPoint(Product product, int quantity,
@@ -227,6 +241,9 @@ public class Company {
 
   public boolean moveProductBetweenCells(Product product, int quantity,
                                          Cell srcCell, Cell destCell) {
+    if (quantity > product.getQuantity()) {
+      return false;
+    }
     if (destCell.addProduct(product, quantity)) {
       srcCell.removeProduct(product, quantity);
       // saveData();

@@ -35,31 +35,31 @@ public class UI extends BaseUI {
     showMenu();
     int choice = readIntInput("Enter your choice: ");
     switch (choice) {
-    case 1:
+      case 1:
       warehouseUI.processMenu();
-      break;
-    case 2:
+        break;
+      case 2:
       productUI.processMenu();
-      break;
-    case 3:
+        break;
+      case 3:
       employeeUI.processMenu();
-      break;
-    case 4:
+        break;
+      case 4:
       fabricUI.processMenu();
-      break;
-    case 5:
+        break;
+      case 5:
       sellPointUI.processMenu();
-      break;
+        break;
     case 6:
       customerUI.processMenu();
-      break;
+        break;
     case 7:
       companyStatsUI.processMenu();
-      break;
-    case 0:
+        break;
+      case 0:
       return false;
-    default:
-      System.out.println("Error: invalid choice. Try again.");
+      default: 
+        System.out.println("Error: invalid choice. Try again.");
       break;
     }
     return true;

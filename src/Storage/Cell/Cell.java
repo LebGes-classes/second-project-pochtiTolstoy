@@ -44,6 +44,8 @@ public class Cell extends Entity {
   }
 
   public boolean addProduct(Product product, int quantity) {
+    // TODO : delete debug info
+    System.out.println("avc " + getAvailableCapacity() + ", quant" + quantity);
     if (getAvailableCapacity() < quantity) {
       return false;
     }

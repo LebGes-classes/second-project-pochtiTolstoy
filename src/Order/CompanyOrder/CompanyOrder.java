@@ -1,13 +1,12 @@
 package Order.CompanyOrder;
 
 import Company.Company;
-import Order.Order;
 import Product.Product;
 import Product.ProductSpecification;
 import UI.BaseUI;
 import Util.ProductSelector;
 
-public class CompanyOrder extends Order {
+public class CompanyOrder {
   private ProductSpecification spec;
   private int quantity;
   private CompanyOrder(ProductSpecification spec, int quantity) {
