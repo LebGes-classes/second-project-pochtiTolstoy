@@ -2,6 +2,7 @@ package Product;
 
 import Storage.Entity;
 import Util.ProductType;
+import java.util.Objects;
 
 public class Product extends Entity {
   private double price;
@@ -41,9 +42,22 @@ public class Product extends Entity {
 
   public ProductType getType() { return type; }
 
-  public boolean isSameProduct(Product other) {
-    return getName().equals(other.getName()) &&
-        getType().equals(other.getType());
+  @Override
+  public boolean equals(Object o) {
+    if (this == o)
+      return true;
+    if (o == null || getClass() != o.getClass())
+      return false;
+    Product product = (Product)o;
+    return Double.compare(product.price, price) == 0 &&
+        Objects.equals(getName(), product.getName()) &&
+        Objects.equals(getDescription(), product.getDescription()) &&
+        type == product.type;
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(getName(), getDescription(), price, type);
   }
 
   @Override

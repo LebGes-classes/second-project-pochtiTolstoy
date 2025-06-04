@@ -24,6 +24,7 @@ public class Cell extends Entity {
   public ArrayList<Product> getProducts() { return products; }
 
   public boolean hasProduct(Product product) {
+    // TODO : should be refactored to use product comparator
     return products.stream().anyMatch(
         p
         -> p.getName().equals(product.getName()) &&
@@ -48,7 +49,7 @@ public class Cell extends Entity {
       return false;
     }
     for (Product p : products) {
-      if (p.isSameProduct(product)) {
+      if (p.equals(product)) {
         p.setQuantity(p.getQuantity() + quantity);
         return true;
       }
@@ -57,14 +58,12 @@ public class Cell extends Entity {
     return true;
   }
 
-  public void removeProduct(Product product) { products.remove(product); }
-
   public void removeProduct(Product product, int quantity) {
     int remainingQuantity = quantity;
     ArrayList<Product> toRemove = new ArrayList<>();
 
     for (Product p : products) {
-      if (p.isSameProduct(product)) {
+      if (p.equals(product)) {
         if (p.getQuantity() <= remainingQuantity) {
           remainingQuantity -= p.getQuantity();
           toRemove.add(p);

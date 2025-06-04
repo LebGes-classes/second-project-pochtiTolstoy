@@ -22,7 +22,7 @@ public class Customer extends Person {
 
   public void addPurchase(Product product, int quantity) {
     for (Product p : purchases) {
-      if (p.isSameProduct(product)) {
+      if (p.equals(product)) {
         p.setQuantity(p.getQuantity() + quantity);
         return;
       }
@@ -32,7 +32,7 @@ public class Customer extends Person {
 
   public void removePurchase(Product product, int quantityToRemove) {
     for (Product p : purchases) {
-      if (p.isSameProduct(product)) {
+      if (p.equals(product)) {
         int newQuantity = p.getQuantity() - quantityToRemove;
         if (newQuantity <= 0) {
           purchases.remove(p);

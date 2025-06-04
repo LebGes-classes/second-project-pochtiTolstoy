@@ -204,6 +204,8 @@ public class Company {
       return false;
     }
 
+    // TODO : refactor this code, remove to caller, and pass here cell, without
+    // warehouse
     Cell sourceCell = null;
     for (Cell cell : warehouse.getCells()) {
       if (cell.hasProduct(product) &&
@@ -220,7 +222,6 @@ public class Company {
     moveProduct.setQuantity(quantity);
     sellPoint.addProduct(moveProduct);
     sourceCell.removeProduct(product, quantity);
-    // saveData();
     return true;
   }
 

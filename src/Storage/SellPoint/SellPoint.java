@@ -61,18 +61,11 @@ public class SellPoint extends Entity {
 
   public double getProfit() { return totalRevenue - totalExpenses; }
 
-  public boolean hasProduct(Product product) {
-    return products.stream().anyMatch(
-        p
-        -> p.getName().equals(product.getName()) &&
-               p.getType() == product.getType());
-  }
-
   public boolean sellProduct(Product product, int quantity) {
     for (Iterator<Product> iterator = products.iterator();
          iterator.hasNext();) {
       Product current = iterator.next();
-      if (!current.isSameProduct(product)) {
+      if (!current.equals(product)) {
         continue;
       }
 
@@ -95,7 +88,7 @@ public class SellPoint extends Entity {
 
   public boolean returnProduct(Product product, int quantity) {
     for (Product p : products) {
-      if (p.isSameProduct(product)) {
+      if (p.equals(product)) {
         p.setQuantity(p.getQuantity() + quantity);
         addExpense(product.getPrice() * quantity);
         return true;
@@ -112,7 +105,7 @@ public class SellPoint extends Entity {
 
   public void addProduct(Product product) {
     for (Product p : products) {
-      if (p.isSameProduct(product)) {
+      if (p.equals(product)) {
         p.setQuantity(p.getQuantity() + product.getQuantity());
         return;
       }
