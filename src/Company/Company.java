@@ -38,21 +38,18 @@ public class Company {
                               Worker worker) {
     Warehouse warehouse = new Warehouse(name, description, manager, worker);
     warehouses.add(warehouse);
-    // saveData();
   }
 
   public void createCell(String name, String description, int capacity,
                          Warehouse warehouse) {
     Cell cell = new Cell(name, description, capacity);
     warehouse.addCell(cell);
-    // saveData();
   }
 
   public void createSellPoint(String name, String description, Manager manager,
                               Worker worker) {
     SellPoint sellPoint = new SellPoint(name, description, manager, worker);
     sellPoints.add(sellPoint);
-    // saveData();
   }
 
   public void createProductSpecification(String name, String description,
@@ -61,30 +58,24 @@ public class Company {
     ProductSpecification product =
         new ProductSpecification(name, description, price, type);
     productsToPurchase.add(product);
-    // saveData();
   }
 
   public void createFabric(String name, String description, ProductType type) {
     Fabric fabric =
         new Fabric(name, description, type, type.getTimeToProduce());
     fabrics.add(fabric);
-    // saveData();
   }
 
   public void closeWarehouse(Warehouse warehouse) {
     warehouse.setActive(false);
-    // Deactivate warehouse employees
     warehouse.getManager().setActive(false);
     warehouse.getWorker().setActive(false);
-    // saveData();
   }
 
   public void closeSellPoint(SellPoint sellPoint) {
     sellPoint.setActive(false);
-    // Deactivate sell point employees
     sellPoint.getManager().setActive(false);
     sellPoint.getWorker().setActive(false);
-    // saveData();
   }
 
   public ArrayList<Warehouse> getActiveWarehouses() {
@@ -122,7 +113,6 @@ public class Company {
     Employee employee =
         new Manager(name, description, contactInfo, age, position, salary);
     employees.add(employee);
-    // saveData();
   }
 
   public void hireWorker(String name, String description, String contactInfo,
@@ -130,12 +120,10 @@ public class Company {
     Employee employee =
         new Worker(name, description, contactInfo, age, position, salary);
     employees.add(employee);
-    // saveData();
   }
 
   public boolean fireEmployee(Employee employee) {
     employee.setActive(false);
-    // saveData();
     return true;
   }
 
@@ -145,7 +133,6 @@ public class Company {
       return false;
     }
 
-    // Find and update the employee in all warehouses
     for (Warehouse warehouse : warehouses) {
       if (warehouse.getManager() == oldEmployee) {
         warehouse.setManager((Manager)newEmployee);
@@ -155,7 +142,6 @@ public class Company {
       }
     }
 
-    // Find and update the employee in all sell points
     for (SellPoint sellPoint : sellPoints) {
       if (sellPoint.getManager() == oldEmployee) {
         sellPoint.addManager((Manager)newEmployee);
@@ -164,7 +150,6 @@ public class Company {
 
     oldEmployee.setActive(false);
     newEmployee.setActive(true);
-    // saveData();
     return true;
   }
 

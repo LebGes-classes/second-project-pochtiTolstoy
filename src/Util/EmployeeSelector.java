@@ -6,6 +6,7 @@ import Person.Employee.Manager.Manager;
 import Person.Employee.Worker.Worker;
 import UI.BaseUI;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public final class EmployeeSelector {
@@ -14,34 +15,38 @@ public final class EmployeeSelector {
   public static <T extends Employee>
       T selectEmployee(Company company, BaseUI ui, String prompt,
                        Class<T> employeeType, String noEmployeesMessage) {
-    List<T> employees = company.getAllEmployees()
-                            .stream()
-                            .filter(employeeType::isInstance)
-                            .map(employeeType::cast)
-                            .collect(Collectors.toList());
-    return selectFromList(ui, employees, prompt, noEmployeesMessage);
+    return selectEmployeeFromSource(company, ui, prompt, employeeType,
+                                    noEmployeesMessage,
+                                    Company::getAllEmployees);
   }
 
   public static <T extends Employee>
       T selectInactiveEmployee(Company company, BaseUI ui, String prompt,
                                Class<T> employeeType,
                                String noEmployeesMessage) {
-    List<T> employees = company.getInactiveEmployees()
-                            .stream()
-                            .filter(employeeType::isInstance)
-                            .map(employeeType::cast)
-                            .collect(Collectors.toList());
-    return selectFromList(ui, employees, prompt, noEmployeesMessage);
+    return selectEmployeeFromSource(company, ui, prompt, employeeType,
+                                    noEmployeesMessage,
+                                    Company::getInactiveEmployees);
   }
 
   public static <T extends Employee>
       T selectActiveEmployee(Company company, BaseUI ui, String prompt,
                              Class<T> employeeType, String noEmployeesMessage) {
-    List<T> employees = company.getActiveEmployees()
+    return selectEmployeeFromSource(company, ui, prompt, employeeType,
+                                    noEmployeesMessage,
+                                    Company::getActiveEmployees);
+  }
+
+  private static <T extends Employee> T selectEmployeeFromSource(
+      Company company, BaseUI ui, String prompt, Class<T> employeeType,
+      String noEmployeesMessage,
+      Function<Company, List<? extends Employee>> employeeSource) {
+    List<T> employees = employeeSource.apply(company)
                             .stream()
                             .filter(employeeType::isInstance)
                             .map(employeeType::cast)
                             .collect(Collectors.toList());
+
     return selectFromList(ui, employees, prompt, noEmployeesMessage);
   }
 
