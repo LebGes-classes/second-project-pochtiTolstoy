@@ -14,6 +14,9 @@ public abstract class BaseUI {
     this.scanner = new Scanner(System.in);
   }
 
+  protected abstract void showMenu();
+  protected abstract boolean processMenu();
+
   public void start() {
     boolean running = true;
     while (running) {
@@ -68,7 +71,4 @@ public abstract class BaseUI {
   }
 
   public void printInfo(String message) { System.out.println(message); }
-
-  protected abstract void showMenu();
-  protected abstract boolean processMenu();
 }

@@ -253,6 +253,20 @@ public class ProductUI extends BaseUI {
       return;
     }
 
+    Cell cell =
+        CellSelector.selectCell(warehouse, this, "Choose source cell: ");
+    if (cell == null) {
+      System.out.println("No cells available!");
+      return;
+    }
+
+    Product product = ProductSelector.selectProductFromCell(
+        cell, this, "Select product to move: ");
+    if (product == null) {
+      System.out.println("No available product.");
+      return;
+    }
+
     SellPoint sellPoint = SellPointSelector.selectActiveSellPoint(
         company, this, "Select target sell point: ");
     if (sellPoint == null) {
@@ -260,16 +274,8 @@ public class ProductUI extends BaseUI {
       return;
     }
 
-    Product product = ProductSelector.selectProductFromWarehouse(
-        warehouse, this, "Select product to move: ");
-    if (product == null) {
-      System.out.println("No available product.");
-      return;
-    }
-
     int quantity = readIntInput("Enter quantity to move: ");
-    if (company.moveProductToSellPoint(product, quantity, warehouse,
-                                       sellPoint)) {
+    if (company.moveProductToSellPoint(product, quantity, cell, sellPoint)) {
       System.out.println("Product moved successfully.");
     } else {
       System.out.println("Failed to move product.");

@@ -198,30 +198,14 @@ public class Company {
   public ArrayList<Fabric> getAllFabrics() { return new ArrayList<>(fabrics); }
 
   public boolean moveProductToSellPoint(Product product, int quantity,
-                                        Warehouse warehouse,
-                                        SellPoint sellPoint) {
-    if (!warehouse.isActive() || !sellPoint.isActive()) {
+                                        Cell cell, SellPoint sellPoint) {
+    if (!sellPoint.isActive() || cell == null) {
       return false;
     }
 
-    // TODO : refactor this code, remove to caller, and pass here cell, without
-    // warehouse
-    Cell sourceCell = null;
-    for (Cell cell : warehouse.getCells()) {
-      if (cell.hasProduct(product) &&
-          cell.getProductQuantity(product) >= quantity) {
-        sourceCell = cell;
-        break;
-      }
-    }
-
-    if (sourceCell == null) {
-      return false;
-    }
-    Product moveProduct = new Product(product);
-    moveProduct.setQuantity(quantity);
+    Product moveProduct = new Product(product, quantity);
     sellPoint.addProduct(moveProduct);
-    sourceCell.removeProduct(product, quantity);
+    cell.removeProduct(product, quantity);
     return true;
   }
 
@@ -232,7 +216,6 @@ public class Company {
     }
     if (destCell.addProduct(product, quantity)) {
       srcCell.removeProduct(product, quantity);
-      // saveData();
       return true;
     }
     return false;
@@ -246,7 +229,6 @@ public class Company {
 
     if (sellPoint.sellProduct(product, quantity)) {
       customer.addPurchase(product, quantity);
-      // saveData();
       return true;
     }
     return false;
@@ -261,7 +243,6 @@ public class Company {
 
     if (sellPoint.returnProduct(product, quantity)) {
       customer.removePurchase(product, quantity);
-      // saveData();
       return true;
     }
     return false;
@@ -293,7 +274,6 @@ public class Company {
                           int age) {
     Customer customer = new Customer(name, description, contactInfo, age);
     customers.add(customer);
-    // saveData();
   }
 
   public boolean reopenWarehouse(Warehouse warehouse, Manager manager,
@@ -307,7 +287,6 @@ public class Company {
     warehouse.addWorker(worker);
     manager.setActive(true);
     worker.setActive(true);
-    // saveData();
     return true;
   }
 
@@ -322,7 +301,6 @@ public class Company {
     sellPoint.addWorker(worker);
     manager.setActive(true);
     worker.setActive(true);
-    // saveData();
     return true;
   }
 

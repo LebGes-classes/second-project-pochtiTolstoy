@@ -95,9 +95,7 @@ public class SellPoint extends Entity {
       }
     }
 
-    Product newProduct =
-        new Product(product.getName(), product.getDescription(),
-                    product.getPrice(), quantity, product.getType());
+    Product newProduct = new Product(product, quantity);
     products.add(newProduct);
     addExpense(product.getPrice() * quantity);
     return true;
@@ -115,9 +113,7 @@ public class SellPoint extends Entity {
 
   public int getProductQuantity(Product product) {
     return products.stream()
-        .filter(p
-                -> p.getName().equals(product.getName()) &&
-                       p.getType() == product.getType())
+        .filter(p -> p.equals(product))
         .mapToInt(Product::getQuantity)
         .sum();
   }

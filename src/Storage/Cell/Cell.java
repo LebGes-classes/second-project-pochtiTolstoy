@@ -33,9 +33,7 @@ public class Cell extends Entity {
 
   public int getProductQuantity(Product product) {
     return products.stream()
-        .filter(p
-                -> p.getName().equals(product.getName()) &&
-                       p.getType() == product.getType())
+        .filter(p -> p.equals(product))
         .mapToInt(Product::getQuantity)
         .sum();
   }
