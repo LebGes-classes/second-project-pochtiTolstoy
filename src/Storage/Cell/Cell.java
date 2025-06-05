@@ -24,11 +24,7 @@ public class Cell extends Entity {
   public ArrayList<Product> getProducts() { return products; }
 
   public boolean hasProduct(Product product) {
-    // TODO : should be refactored to use product comparator
-    return products.stream().anyMatch(
-        p
-        -> p.getName().equals(product.getName()) &&
-               p.getType() == product.getType());
+    return products.stream().anyMatch(p -> p.equals(product));
   }
 
   public int getProductQuantity(Product product) {
