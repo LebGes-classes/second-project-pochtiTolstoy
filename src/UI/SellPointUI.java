@@ -156,7 +156,7 @@ public class SellPointUI extends BaseUI {
       return;
     }
 
-    if (company.changeSellPointManager(sellPoint, newManager)) {
+    if (company.replaceSellPointManager(sellPoint, newManager)) {
       printSuccess("Sell point manager changed successfully.");
     } else {
       printError("Failed to change sell point manager.");

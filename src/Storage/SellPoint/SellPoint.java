@@ -19,11 +19,9 @@ public class SellPoint extends Entity {
   public SellPoint(String name, String description, Manager manager,
                    Worker worker) {
     super(name, description);
+    addWorker(worker);
+    addManager(manager);
     this.isActive = true;
-    this.manager = manager;
-    this.manager.setActive(true);
-    this.worker = worker;
-    this.worker.setActive(true);
     this.products = new ArrayList<>();
     this.totalRevenue = 0.0;
     this.totalExpenses = 0.0;
@@ -33,13 +31,31 @@ public class SellPoint extends Entity {
 
   public void setActive(boolean active) { isActive = active; }
 
-  public Manager getManager() { return manager; }
-
-  public void addManager(Manager manager) { this.manager = manager; }
+  public void addManager(Manager manager) {
+    if (manager == null)
+      return;
+    manager.removeStorage();
+    if (this.manager != null) {
+      this.manager.removeStorage();
+    }
+    this.manager = manager;
+    this.manager.assignStorage(this);
+  }
 
   public Worker getWorker() { return worker; }
 
-  public void addWorker(Worker worker) { this.worker = worker; }
+  public void addWorker(Worker worker) {
+    if (worker == null)
+      return;
+    worker.removeStorage();
+    if (this.worker != null) {
+      this.worker.removeStorage();
+    }
+    this.worker = worker;
+    this.worker.assignStorage(this);
+  }
+
+  public Manager getManager() { return manager; }
 
   public ArrayList<Product> getProducts() { return products; }
 

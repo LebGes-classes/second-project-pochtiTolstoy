@@ -45,7 +45,8 @@ public class EmployeeUI extends BaseUI {
       listInactiveEmployees();
       break;
     case 6:
-      fireEmployee();
+      // TODO : refactor
+      // fireEmployee();
       break;
     case 7:
       showEmployeeInfo();
@@ -122,48 +123,49 @@ public class EmployeeUI extends BaseUI {
     }
   }
 
-  private void fireEmployee() {
-    Employee employeeToFire = EmployeeSelector.selectActiveEmployee(
-        company, this, "Select active emplyee: ", Employee.class,
-        "No active employee to fire");
-    if (employeeToFire == null) {
-      return;
-    }
-
-    ArrayList<Employee> inactiveEmployees = new ArrayList<>();
-    if (employeeToFire instanceof Manager) {
-      inactiveEmployees.addAll(company.getInactiveManagers());
-    } else if (employeeToFire instanceof Worker) {
-      inactiveEmployees.addAll(company.getInactiveWorkers());
-    }
-
-    if (inactiveEmployees.isEmpty()) {
-      System.out.println(
-          "No inactive employees available to replace the fired employee.");
-      return;
-    }
-
-    System.out.println("Select replacement employee:");
-    for (int i = 0; i < inactiveEmployees.size(); i++) {
-      System.out.printf("%d. %s%n", i + 1, inactiveEmployees.get(i));
-    }
-
-    int replacementChoice =
-        readIntInput("Enter replacement employee number: ") - 1;
-    if (replacementChoice < 0 ||
-        replacementChoice >= inactiveEmployees.size()) {
-      System.out.println("Invalid replacement employee selection.");
-      return;
-    }
-
-    Employee replacementEmployee = inactiveEmployees.get(replacementChoice);
-
-    if (company.replaceEmployee(employeeToFire, replacementEmployee)) {
-      System.out.println("Employee replaced successfully.");
-    } else {
-      System.out.println("Failed to replace employee.");
-    }
-  }
+  // TODO : refactor
+  // private void fireEmployee() {
+  //   Employee employeeToFire = EmployeeSelector.selectActiveEmployee(
+  //       company, this, "Select active emplyee: ", Employee.class,
+  //       "No active employee to fire");
+  //   if (employeeToFire == null) {
+  //     return;
+  //   }
+  //
+  //   ArrayList<Employee> inactiveEmployees = new ArrayList<>();
+  //   if (employeeToFire instanceof Manager) {
+  //     inactiveEmployees.addAll(company.getInactiveManagers());
+  //   } else if (employeeToFire instanceof Worker) {
+  //     inactiveEmployees.addAll(company.getInactiveWorkers());
+  //   }
+  //
+  //   if (inactiveEmployees.isEmpty()) {
+  //     System.out.println(
+  //         "No inactive employees available to replace the fired employee.");
+  //     return;
+  //   }
+  //
+  //   System.out.println("Select replacement employee:");
+  //   for (int i = 0; i < inactiveEmployees.size(); i++) {
+  //     System.out.printf("%d. %s%n", i + 1, inactiveEmployees.get(i));
+  //   }
+  //
+  //   int replacementChoice =
+  //       readIntInput("Enter replacement employee number: ") - 1;
+  //   if (replacementChoice < 0 ||
+  //       replacementChoice >= inactiveEmployees.size()) {
+  //     System.out.println("Invalid replacement employee selection.");
+  //     return;
+  //   }
+  //
+  //   Employee replacementEmployee = inactiveEmployees.get(replacementChoice);
+  //
+  //   if (company.replaceEmployee(employeeToFire, replacementEmployee)) {
+  //     System.out.println("Employee replaced successfully.");
+  //   } else {
+  //     System.out.println("Failed to replace employee.");
+  //   }
+  // }
 
   private void showEmployeeInfo() {
     Employee employee = EmployeeSelector.selectEmployee(

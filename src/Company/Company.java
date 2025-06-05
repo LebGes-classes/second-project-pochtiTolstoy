@@ -68,14 +68,14 @@ public class Company {
 
   public void closeWarehouse(Warehouse warehouse) {
     warehouse.setActive(false);
-    warehouse.getManager().setActive(false);
-    warehouse.getWorker().setActive(false);
+    warehouse.getManager().removeStorage();
+    warehouse.getWorker().removeStorage();
   }
 
   public void closeSellPoint(SellPoint sellPoint) {
     sellPoint.setActive(false);
-    sellPoint.getManager().setActive(false);
-    sellPoint.getWorker().setActive(false);
+    sellPoint.getManager().removeStorage();
+    sellPoint.getWorker().removeStorage();
   }
 
   public ArrayList<Warehouse> getActiveWarehouses() {
@@ -122,34 +122,49 @@ public class Company {
     employees.add(employee);
   }
 
-  public boolean fireEmployee(Employee employee) {
-    employee.setActive(false);
+  public boolean replaceWarehouseWorker(Warehouse warehouse, Worker newWorker) {
+    if (newWorker == null || newWorker.isActive()) {
+      return false;
+    }
+    if (!warehouse.isActive()) {
+      return false;
+    }
+    warehouse.addWorker(newWorker);
     return true;
   }
 
-  public boolean replaceEmployee(Employee oldEmployee, Employee newEmployee) {
-    if (oldEmployee == null || newEmployee == null || !oldEmployee.isActive() ||
-        newEmployee.isActive()) {
+  public boolean replaceWarehouseManager(Warehouse warehouse,
+                                         Manager newManager) {
+    if (!warehouse.isActive()) {
       return false;
     }
-
-    for (Warehouse warehouse : warehouses) {
-      if (warehouse.getManager() == oldEmployee) {
-        warehouse.setManager((Manager)newEmployee);
-      }
-      if (warehouse.getWorker() == oldEmployee) {
-        warehouse.addWorker((Worker)newEmployee);
-      }
+    if (newManager == null || newManager.isActive()) {
+      return false;
     }
+    warehouse.addManager(newManager);
+    return true;
+  }
 
-    for (SellPoint sellPoint : sellPoints) {
-      if (sellPoint.getManager() == oldEmployee) {
-        sellPoint.addManager((Manager)newEmployee);
-      }
+  public boolean replaceSellPointWorker(SellPoint sellPoint, Worker newWorker) {
+    if (!sellPoint.isActive()) {
+      return false;
     }
+    if (newWorker == null || newWorker.isActive()) {
+      return false;
+    }
+    sellPoint.addWorker(newWorker);
+    return true;
+  }
 
-    oldEmployee.setActive(false);
-    newEmployee.setActive(true);
+  public boolean replaceSellPointManager(SellPoint sellPoint,
+                                         Manager newManager) {
+    if (!sellPoint.isActive()) {
+      return false;
+    }
+    if (newManager == null || newManager.isActive()) {
+      return false;
+    }
+    sellPoint.addManager(newManager);
     return true;
   }
 
@@ -283,7 +298,7 @@ public class Company {
     }
 
     warehouse.setActive(true);
-    warehouse.setManager(manager);
+    warehouse.addManager(manager);
     warehouse.addWorker(worker);
     manager.setActive(true);
     worker.setActive(true);
@@ -301,30 +316,6 @@ public class Company {
     sellPoint.addWorker(worker);
     manager.setActive(true);
     worker.setActive(true);
-    return true;
-  }
-
-  public boolean changeWarehouseManager(Warehouse warehouse,
-                                        Manager newManager) {
-    if (warehouse == null || newManager == null || !warehouse.isActive() ||
-        newManager.isActive()) {
-      return false;
-    }
-
-    Manager oldManager = warehouse.getManager();
-    replaceEmployee(oldManager, newManager);
-    return true;
-  }
-
-  public boolean changeSellPointManager(SellPoint sellPoint,
-                                        Manager newManager) {
-    if (sellPoint == null || newManager == null || !sellPoint.isActive() ||
-        newManager.isActive()) {
-      return false;
-    }
-
-    Manager oldManager = sellPoint.getManager();
-    replaceEmployee(oldManager, newManager);
     return true;
   }
 

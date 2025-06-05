@@ -179,7 +179,7 @@ public class WarehouseUI extends BaseUI {
       return;
     }
 
-    if (company.changeWarehouseManager(warehouse, newManager)) {
+    if (company.replaceWarehouseManager(warehouse, newManager)) {
       printSuccess("Warehouse manager changed successfully.");
     } else {
       printError("Failed to change warehouse manager.");

@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 
 public class Warehouse extends Entity implements Serializable {
   private ArrayList<Cell> cells;
-  private ArrayList<Worker> workers;
+  private Worker worker;
   private Manager manager;
   private boolean isActive;
 
@@ -22,8 +22,7 @@ public class Warehouse extends Entity implements Serializable {
                    Worker worker) {
     super(name, description);
     this.cells = new ArrayList<>();
-    this.workers = new ArrayList<>();
-    setManager(manager);
+    addManager(manager);
     addWorker(worker);
     this.isActive = true;
   }
@@ -51,34 +50,33 @@ public class Warehouse extends Entity implements Serializable {
 
   public Manager getManager() { return manager; }
 
-  public void setManager(Manager manager) {
+  public void addManager(Manager manager) {
     if (manager == null)
       return;
+    manager.removeStorage();
     if (this.manager != null) {
-      this.manager.removeWarehouse();
+      this.manager.removeStorage();
     }
     this.manager = manager;
-    manager.assignWarehouse(this);
+    this.manager.assignStorage(this);
   }
 
-  public ArrayList<Worker> getWorkers() { return this.workers; }
+  public Worker getWorker() { return this.worker; }
 
   public void addWorker(Worker worker) {
     if (worker == null)
       return;
-    if (workers.contains(worker))
-      return;
-    this.workers.add(worker);
-    worker.assignWarehouse(this);
+    worker.removeStorage();
+    if (this.worker != null) {
+      this.worker.removeStorage();
+    }
+    this.worker = worker;
+    this.worker.assignStorage(this);
   }
 
   public boolean isActive() { return isActive; }
 
   public void setActive(boolean active) { isActive = active; }
-
-  public Worker getWorker() {
-    return workers.isEmpty() ? null : workers.get(0);
-  }
 
   @Override
   public String toString() {
