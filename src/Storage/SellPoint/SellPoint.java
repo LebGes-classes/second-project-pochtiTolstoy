@@ -31,6 +31,16 @@ public class SellPoint extends Entity {
 
   public void setActive(boolean active) { isActive = active; }
 
+  public void deleteWorker() {
+    worker.removeStorage();
+    this.worker = null;
+  }
+
+  public void deleteManager() {
+    manager.removeStorage();
+    this.manager = null;
+  }
+
   public void addManager(Manager manager) {
     if (manager == null)
       return;
@@ -136,10 +146,13 @@ public class SellPoint extends Entity {
 
   @Override
   public String toString() {
+    String managerName = manager != null ? manager.getName() : "No Manager";
+    String workerName = worker != null ? worker.getName() : "No Worker";
+
     return String.format(
         "SellPoint{name='%s', active=%b, manager='%s', worker='%s', "
             + "revenue=%.2f, expenses=%.2f, profit=%.2f}",
-        getName(), isActive, manager.getName(), worker.getName(), totalRevenue,
+        getName(), isActive, managerName, workerName, totalRevenue,
         totalExpenses, getProfit());
   }
 }

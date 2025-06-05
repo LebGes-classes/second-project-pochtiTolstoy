@@ -9,6 +9,7 @@ import Storage.SellPoint.SellPoint;
 import Storage.Warehouse.Warehouse;
 import Util.EmployeeSelector;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class EmployeeUI extends BaseUI {
   public EmployeeUI(Company company) { super(company); }
@@ -108,6 +109,77 @@ public class EmployeeUI extends BaseUI {
     }
   }
 
+  private void fireEmployee() {
+    Employee employeeToFire = selectActiveEmployee();
+    if (employeeToFire == null)
+      return;
+
+    ArrayList<Employee> inactiveEmployees =
+        getInactiveEmployees(employeeToFire);
+    if (inactiveEmployees.isEmpty()) {
+      System.out.println(
+          "No inactive employees available to replace the fired employee.");
+      return;
+    }
+
+    Employee replacementEmployee = selectReplacementEmployee(inactiveEmployees);
+    if (replacementEmployee == null)
+      return;
+
+    performReplacement(employeeToFire, replacementEmployee);
+  }
+
+  private Employee selectActiveEmployee() {
+    return EmployeeSelector.selectActiveEmployee(
+        company, this, "Select active employee: ", Employee.class,
+        "No active employee to fire");
+  }
+
+  private ArrayList<Employee> getInactiveEmployees(Employee employee) {
+    if (employee instanceof Manager) {
+      return new ArrayList<>(company.getInactiveManagers());
+    } else if (employee instanceof Worker) {
+      return new ArrayList<>(company.getInactiveWorkers());
+    }
+    return null;
+  }
+
+  private Employee selectReplacementEmployee(ArrayList<Employee> candidates) {
+    System.out.println("Select replacement employee:");
+    for (int i = 0; i < candidates.size(); i++) {
+      System.out.printf("%d. %s%n", i + 1, candidates.get(i));
+    }
+
+    int choice = readIntInput("Enter replacement employee number: ") - 1;
+    if (choice < 0 || choice >= candidates.size()) {
+      System.out.println("Invalid selection.");
+      return null;
+    }
+    return candidates.get(choice);
+  }
+
+  private void performReplacement(Employee toFire, Employee replacement) {
+    Entity storage = toFire.getStorage();
+    boolean success = false;
+
+    if (storage instanceof Warehouse warehouse) {
+      if (replacement instanceof Manager manager) {
+        success = company.replaceWarehouseManager(warehouse, manager);
+      } else if (replacement instanceof Worker worker) {
+        success = company.replaceWarehouseWorker(warehouse, worker);
+      }
+    } else if (storage instanceof SellPoint sellPoint) {
+      if (replacement instanceof Worker worker) {
+        success = company.replaceSellPointWorker(sellPoint, worker);
+      } else if (replacement instanceof Manager manager) {
+        success = company.replaceSellPointManager(sellPoint, manager);
+      }
+    }
+
+    System.out.println(success ? "Employee replaced successfully."
+                               : "Failed to replace employee.");
+  }
+
   private void listInactiveEmployees() {
     ArrayList<Employee> employees = company.getAllEmployees();
     ArrayList<Employee> inactiveEmployees = new ArrayList<>();
@@ -122,69 +194,6 @@ public class EmployeeUI extends BaseUI {
     }
     for (Employee employee : inactiveEmployees) {
       printInfo(employee.toString());
-    }
-  }
-
-  private void fireEmployee() {
-    Employee employeeToFire = EmployeeSelector.selectActiveEmployee(
-        company, this, "Select active emplyee: ", Employee.class,
-        "No active employee to fire");
-    if (employeeToFire == null) {
-      return;
-    }
-
-    ArrayList<Employee> inactiveEmployees = new ArrayList<>();
-    if (employeeToFire instanceof Manager) {
-      inactiveEmployees.addAll(company.getInactiveManagers());
-    } else if (employeeToFire instanceof Worker) {
-      inactiveEmployees.addAll(company.getInactiveWorkers());
-    }
-
-    if (inactiveEmployees.isEmpty()) {
-      System.out.println(
-          "No inactive employees available to replace the fired employee.");
-      return;
-    }
-
-    System.out.println("Select replacement employee:");
-    for (int i = 0; i < inactiveEmployees.size(); i++) {
-      System.out.printf("%d. %s%n", i + 1, inactiveEmployees.get(i));
-    }
-
-    int replacementChoice =
-        readIntInput("Enter replacement employee number: ") - 1;
-    if (replacementChoice < 0 ||
-        replacementChoice >= inactiveEmployees.size()) {
-      System.out.println("Invalid replacement employee selection.");
-      return;
-    }
-
-    Employee replacementEmployee = inactiveEmployees.get(replacementChoice);
-    Entity storage = employeeToFire.getStorage();
-
-    boolean result = false;
-    if (storage instanceof Warehouse && replacementEmployee instanceof
-                                            Manager) {
-      result = company.replaceWarehouseManager((Warehouse)storage,
-                                               (Manager)replacementEmployee);
-    } else if (storage instanceof Warehouse && replacementEmployee instanceof
-                                                   Worker) {
-      result = company.replaceWarehouseWorker((Warehouse)storage,
-                                              (Worker)replacementEmployee);
-    } else if (storage instanceof SellPoint && replacementEmployee instanceof
-                                                   Worker) {
-      result = company.replaceSellPointWorker((SellPoint)storage,
-                                              (Worker)replacementEmployee);
-    } else if (storage instanceof SellPoint && replacementEmployee instanceof
-                                                   Manager) {
-      result = company.replaceSellPointManager((SellPoint)storage,
-                                               (Manager)replacementEmployee);
-    }
-
-    if (result) {
-      System.out.println("Employee replaced successfully.");
-    } else {
-      System.out.println("Failed to replace employee.");
     }
   }
 

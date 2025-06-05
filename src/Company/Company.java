@@ -67,15 +67,15 @@ public class Company {
   }
 
   public void closeWarehouse(Warehouse warehouse) {
+    warehouse.deleteWorker();
+    warehouse.deleteManager();
     warehouse.setActive(false);
-    warehouse.getManager().removeStorage();
-    warehouse.getWorker().removeStorage();
   }
 
   public void closeSellPoint(SellPoint sellPoint) {
+    sellPoint.deleteWorker();
+    sellPoint.deleteManager();
     sellPoint.setActive(false);
-    sellPoint.getManager().removeStorage();
-    sellPoint.getWorker().removeStorage();
   }
 
   public ArrayList<Warehouse> getActiveWarehouses() {

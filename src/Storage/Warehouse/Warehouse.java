@@ -78,6 +78,16 @@ public class Warehouse extends Entity implements Serializable {
 
   public void setActive(boolean active) { isActive = active; }
 
+  public void deleteWorker() {
+    worker.removeStorage();
+    this.worker = null;
+  }
+
+  public void deleteManager() {
+    manager.removeStorage();
+    this.manager = null;
+  }
+
   @Override
   public String toString() {
     String managerName = (manager != null) ? manager.getName() : "none";

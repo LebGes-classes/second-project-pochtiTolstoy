@@ -22,7 +22,8 @@ public class Worker extends Employee {
 
   @Override
   public String toString() {
-    return "Worker\nWarehouse name : " + getStorage().getName() + "\n" +
-        super.toString();
+    String storageName =
+        (getStorage() != null) ? getStorage().getName() : "none";
+    return "Worker\nStorage name : " + storageName + "\n" + super.toString();
   }
 }
