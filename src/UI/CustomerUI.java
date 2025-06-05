@@ -18,6 +18,7 @@ public class CustomerUI extends BaseUI {
 
   @Override
   public boolean processMenu() {
+    clearScreen();
     showMenu();
     int choice = readIntInput("Enter your choice: ");
     switch (choice) {
@@ -35,6 +36,7 @@ public class CustomerUI extends BaseUI {
     default:
       printError("Invalid choice. Please try again.");
     }
+    waitForEnter();
     return true;
   }
 

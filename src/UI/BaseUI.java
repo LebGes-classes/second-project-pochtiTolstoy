@@ -1,6 +1,7 @@
 package UI;
 
 import Company.Company;
+import java.io.IOException;
 import java.util.Scanner;
 
 // base ui class
@@ -11,6 +12,13 @@ public abstract class BaseUI {
   public BaseUI(Company company) {
     this.company = company;
     this.scanner = new Scanner(System.in);
+  }
+
+  public void start() {
+    boolean running = true;
+    while (running) {
+      running = processMenu();
+    }
   }
 
   public int readIntInput(String prompt) {
@@ -47,6 +55,16 @@ public abstract class BaseUI {
 
   public void printSuccess(String message) {
     System.out.println("Success: " + message);
+  }
+
+  public void clearScreen() {
+    System.out.print("\033[H\033[2J");
+    System.out.flush();
+  }
+
+  public void waitForEnter() {
+    System.out.println("Press enter to continue: ");
+    scanner.nextLine();
   }
 
   public void printInfo(String message) { System.out.println(message); }
