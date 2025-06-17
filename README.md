@@ -2,10 +2,10 @@
 # SecondProject
 
 ## UML diagram
-![UML](./misc/dep.png)
+![UML](./misc/deps.drawio.png)
 
 ## UML inheritance
-![UML](./misc/hierarchy.png)
+![UML](./misc/classes-java-project.drawio.png)
 
 ## Описание работы
 1. Нанять работника и менеджера
